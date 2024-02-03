@@ -1,0 +1,284 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    /* Prevent horizontal scrollbar */
+}
+
+.container-fluid {
+    height: 100%;
+    padding: 0;
+    display: flex;
+    /* Use flexbox for layout */
+}
+
+.table-container {
+    height: calc(100% - 60px);
+    overflow-y: hidden;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.table-scroll {
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.full-height-iframe {
+    height: 100%;
+    /* Adjust to full height of its parent */
+    width: 100%;
+    /* Full width */
+    border: none;
+    overflow: auto;
+    background-color: #181818;
+}
+
+h2 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#searchBox,
+#tagFilter {
+    flex-grow: 1;
+    /* Allow them to grow as needed */
+    margin: 0 5px;
+    /* Add some margin around */
+}
+
+#searchBox {
+    margin-left: 0;
+    /* No left margin for search box */
+}
+
+#tagFilter {
+    margin-right: 0;
+    /* No right margin for filter */
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table th,
+.table td {
+    padding: 10px;
+    /* Reducing padding for a sleeker look */
+    border-bottom: 1px solid #ddd;
+    /* Subtle bottom border for each cell */
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #007bff;
+    color: #fff;
+}
+
+.table tbody tr {
+    transition: background-color 0.3s ease;
+}
+
+.table tbody tr:hover {
+    background-color: #f2f2f2;
+    /* Hover effect */
+}
+
+/* Removes the last border from the bottom cell of each column */
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Adjusting the look of the table header and body for consistency */
+.table-dark thead th {
+    background-color: #343a40;
+    color: #fff;
+}
+
+.table-dark tbody tr {
+    background-color: #fff;
+    color: #333;
+}
+
+.table-dark tbody tr:hover td {
+    background-color: #e9ecef;
+}
+
+.tag {
+    background-color: #007bff;
+    color: white;
+    padding: 2px 5px;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.sidebar-toggle {
+    position: fixed;
+    top: 8px;
+    /* Adjust vertical position */
+    left: 15px;
+    /* Move slightly to the right */
+    z-index: 1050;
+    cursor: pointer;
+    background-color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 1.2rem;
+}
+
+
+.sidebar-hidden+.sidebar-toggle {
+    left: calc(15px);
+    /* Adjust 50px based on your design */
+}
+
+.sidebar-toggle:hover {
+    background-color: #f8f9fa;
+}
+
+/* Styles to hide the sidebar and adjust the main content area */
+.sidebar-hidden .col-lg-3 {
+    display: none;
+}
+
+.sidebar-hidden .col-lg-9 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+.col-lg-3 {
+    background: #f8f9fa;
+    overflow-y: auto;
+    /* Allows scrolling within the sidebar */
+    border-right: 1px solid #ddd;
+    height: 100%;
+    /* Full height of the parent */
+}
+
+.full-height-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.row.flex-fill {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    margin: 0;
+    /* Removes default margin */
+}
+
+.col-lg-9 {
+    flex-grow: 1;
+    overflow-y: auto;
+    /* Allows scrolling within the note display area */
+    height: 100%;
+    /* Full height of the parent */
+    background-color: #181818;
+}
+
+.col-lg-3,
+.col-lg-9 {
+    padding: 0;
+    /* Removes default padding */
+}
+
+.sidebar-header {
+    padding: 10px;
+    display: flex;
+    margin-left: 50px;
+    align-items: center;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #ddd;
+}
+
+.search-filter-container {
+    display: flex;
+    flex-grow: 1;
+    /* Allow it to take the remaining space */
+    align-items: center;
+    /* Vertically center contents */
+}
+
+@media (max-width: 767px) {
+    .sidebar-header {
+        margin-left: 0;
+        /* Remove left margin for mobile view */
+    }
+
+    .sidebar-toggle {
+        position: fixed;
+        top: 50%;
+        border: none;
+        background-color: #2A2A2A;
+        /* Center vertically */
+        left: 0;
+        transform: translateY(-50%);
+        /* Center alignment adjustment */
+        width: 25px;
+        /* Further reduce width for a slimmer appearance */
+        height: 60px;
+        /* Theme color for visibility */
+        color: white;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        border-top-right-radius: 15px;
+        /* Adjusted rounded corners for the smaller size */
+        border-bottom-right-radius: 15px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        /* Soft shadow for depth */
+        transition: all 0.3s ease;
+        /* Smooth transition for interaction */
+    }
+
+    .note-selected .sidebar-toggle {
+        display: flex;
+        /* Show toggle button when a note is selected */
+    }
+
+    .sidebar-toggle:hover {
+        background-color: #0056b3;
+        /* Darker shade on hover for feedback */
+    }
+
+    .sidebar-toggle span {
+        /* writing-mode: vertical-rl; */
+        /* Vertical text for readability */
+        text-orientation: mixed;
+        /* Ensure proper orientation */
+        font-weight: bold;
+        /* Bold icon text for visibility */
+        letter-spacing: 0.05em;
+        /* Spacing for clarity */
+    }
+
+    /* Adjust when sidebar is hidden */
+    .sidebar-hidden .sidebar-toggle {
+        width: 30px;
+        /* Slightly wider when active for emphasis */
+        left: -5px;
+        /* Less shift to the left for a subtle hint */
+    }
+
+    .sidebar-hidden .col-lg-3 {
+        display: none;
+        /* Hide sidebar in mobile view by default */
+    }
+
+    .sidebar-hidden .col-lg-9 {
+        display: block;
+        /* Show content when sidebar is hidden */
+    }
+}
