@@ -4,6 +4,7 @@ body {
 	animation: gradientBG 30s linear infinite;
 	color: #000000;
 	padding-top: 40px;
+	padding-bottom: 60px;
 }
 
 @keyframes gradientBG {
@@ -136,6 +137,24 @@ body {
 	text-align: justify;
 }
 
+.project-list {
+	list-style: none;
+	padding-left: 0;
+}
+
+.project-list li {
+	margin-bottom: 8px;
+	line-height: 1.4;
+	display: flex;
+	align-items: flex-start;
+}
+
+.project-list li::before {
+	content: "-";
+	margin-right: 8px;
+	flex-shrink: 0;
+}
+
 .card,
 .card-item,
 .about-me {
@@ -171,6 +190,29 @@ body {
 
 .skills-table tr:hover {
 	background-color: #d5fdff2d;
+}
+
+/* Hanging indent for skills subcategories */
+.skill-item {
+	display: flex;
+	align-items: flex-start;
+	margin-bottom: 8px;
+	line-height: 1.4;
+}
+
+.skill-item:last-child {
+	margin-bottom: 0;
+}
+
+.skill-label {
+	font-weight: bold;
+	margin-right: 8px;
+	flex-shrink: 0;
+	min-width: fit-content;
+}
+
+.skill-content {
+	flex: 1;
 }
 
 #coursesList1 .card-body,
@@ -322,6 +364,64 @@ body {
 
 .about-me h2 {
 	text-shadow: 0 0 2px #ADD8E6, 0 0 4px #ADD8E6;
+}
+
+/* Mobile-friendly skills table */
+@media (max-width: 768px) {
+	.skills-table {
+		font-size: 0.9em;
+	}
+
+	.skills-table th,
+	.skills-table td {
+		padding: 10px 8px;
+		display: block;
+		width: 100%;
+		border: none;
+		text-align: left;
+	}
+
+	.skills-table th {
+		background-color: #f8f9fa;
+		font-weight: bold;
+		margin-top: 15px;
+		margin-bottom: 5px;
+		border-radius: 5px;
+		padding: 12px 15px;
+	}
+
+	.skills-table td {
+		margin-bottom: 15px;
+		line-height: 1.5;
+	}
+
+	.skill-item {
+		display: block;
+		margin-bottom: 15px;
+	}
+
+	.skill-label {
+		display: block;
+		margin-bottom: 6px;
+		font-size: 0.95em;
+		font-weight: bold;
+	}
+
+	.skill-content {
+		display: block;
+		margin-left: 15px;
+		line-height: 1.4;
+		color: #333;
+	}
+
+	.skills-table tr {
+		display: block;
+		margin-bottom: 10px;
+	}
+
+	.skills-table tbody {
+		display: block;
+	}
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
