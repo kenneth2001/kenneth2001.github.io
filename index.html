@@ -1,339 +1,141 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="index, follow">
-    <title>Kenneth Wan: Data Scientist | Hong Kong</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./css/homepage.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <meta name="keywords" content="Kenneth, Wan Yee Ki, Associate Data Scientist, OOCL, Data Engineer, AI Specialist, Computer Science, Hong Kong, Technology, Programming, Imperial College London, CUHK, LLM, RAG, LangChain">
-    <meta name="description" content="Explore Kenneth Wan Yee Ki's portfolio: Associate Data Scientist at OOCL specializing in LLM-based automation, and operational optimization. Expert in machine learning, data analytics, and AI solutions with academic achievements from CUHK and Imperial College London.">
-    <meta name="google-site-verification" content="HeBACo3HpSCSuLlOAbvd2ipfDgvhazPH_EsgohAxPME" />
-    <link rel="canonical" href="https://kenneth2001.github.io/">
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yee Ki Wan (Kenneth) | Data Scientist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              // HK Neon Palette
+              neon: {
+                blue: '#00f3ff',    // Cyan-ish
+                pink: '#ff00ff',    // Magenta
+                purple: '#bc13fe',  // Electric Purple
+                green: '#0aff00',   // Matrix/Neon Green
+              },
+              // Existing Palettes
+              primary: {
+                50: '#f5f3ff',
+                100: '#ede9fe',
+                200: '#ddd6fe',
+                300: '#c4b5fd',
+                400: '#a78bfa',
+                500: '#8b5cf6',
+                600: '#7c3aed',
+                700: '#6d28d9',
+                800: '#5b21b6',
+                900: '#4c1d95',
+              },
+              slate: {
+                50: '#fafafa',
+                100: '#f4f4f5',
+                200: '#e4e4e7',
+                300: '#d4d4d8',
+                400: '#a1a1aa',
+                500: '#71717a',
+                600: '#52525b',
+                700: '#3f3f46',
+                800: '#27272a',
+                850: '#202025',
+                900: '#18181b',
+                950: '#09090b',
+              }
+            },
+            boxShadow: {
+              'neon-blue': '0 0 5px theme("colors.neon.blue"), 0 0 20px theme("colors.neon.blue")',
+              'neon-pink': '0 0 5px theme("colors.neon.pink"), 0 0 20px theme("colors.neon.pink")',
+              'neon-card': '0 0 15px rgba(139, 92, 246, 0.15)',
+            },
+            animation: {
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'flicker': 'flicker 3s infinite alternate',
+            },
+            keyframes: {
+              flicker: {
+                '0%, 19%, 21%, 23%, 25%, 54%, 56%, 100%': {
+                  opacity: 1,
+                  filter: 'drop-shadow(0 0 4px theme("colors.neon.pink"))'
+                },
+                '20%, 24%, 55%': {
+                  opacity: 0.5,
+                  filter: 'none'
+                },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #09090b;
+        color: #fafafa;
+        background-image: 
+          radial-gradient(circle at 15% 50%, rgba(76, 29, 149, 0.08), transparent 25%),
+          radial-gradient(circle at 85% 30%, rgba(255, 0, 255, 0.05), transparent 25%);
+      }
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #09090b;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #27272a;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3f3f46;
+      }
+      
+      /* Utilities */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .mask-linear-fade {
+        mask-image: linear-gradient(to right, black 85%, transparent 100%);
+        -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+      }
+      
+      /* Neon Text Utilities */
+      .text-neon-blue {
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+      }
+      .text-neon-pink {
+        text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24"
+  }
+}
+</script>
 </head>
-<body>
-    <div id="particles-js"></div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#"></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#about">👤 About Me</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#experience">💼 Experience</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#education">🎓 Education</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#skills">🛠 Skills</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="#github_repositories">🚀 GitHub Repositories</a>
-                </li>
-                <!-- <li class="nav-item active">
-                    <a class="nav-link" href="./noteBrowser.html">📚 My Notes</a>
-                </li> -->
-            </ul>
-        </div>
-    </nav>
-
-    <div class="container mt-5">
-        <section id="about" class="mt-5">
-            <h2 class="section-title">👤 About Me</h2>
-            <div class="about-me">
-                <div>
-                    <h2>Wan Yee Ki, Kenneth</h2>
-                    <ul>
-                        <li>📍 Based in Hong Kong</li>
-                        <li>🎓 MSc in Computing (AI & ML) from Imperial College London - Graduated with Distinction</li>
-                        <li>🎓 First-class Honors in Computer Science from The Chinese University of Hong Kong</li>
-                        <li>💼 Strong in database and information systems</li>
-                        <li>🔢 Proficient in mathematics, statistics, and data analytics</li>
-                        <li>💻 Experienced in data engineering, deep learning, and web development</li>
-                        <li>🤖 Specialized in LLM-based automation and operational optimization techniques</li>
-                    </ul>
-                </div>
-                <div class="job-interests">
-                    <span class="job-interests-title">Job Interests</span>
-                    <span>Data Scientist</span>
-                    <span>Data Engineer</span>
-                    <span>Data Analyst</span>
-                    <span>AI Engineer</span>
-                </div>
-                <div class="contact-info">
-                    <span class="contact-title">Contact</span>
-                    <a href="mailto:yeekiiiiii@protonmail.com"><span>yeekiiiiii@protonmail.com</span></a>
-                </div>
-                <div class="social-links">
-                    <a href="https://www.linkedin.com/in/yee-ki-wan/" target="_blank"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://github.com/kenneth2001" target="_blank"><i class="fab fa-github"></i></a>
-                </div>
-            </div>
-        </section>
-
-        <section id="experience" class="mt-5">
-            <h2 class="section-title">💼 Experience</h2>
-            <div class="card-item">
-                <h5 class="card-title">Associate Data Scientist - OOCL, Hong Kong</h5>
-                <h6 class="card-subtitle mb-2">September 2024 – Present</h6>
-                <div class="card-text">
-                    <strong>Project 1: LLM-Based Workflow Automation</strong>
-                    <ul class="project-list">
-                        <li>Developed and deployed a Large Language Model (LLM) solution to parse unstructured data from emails, images, and tables, incorporating preprocessing pipelines to extract key information, automate database queries, and categorize content</li>
-                        <li>Implemented an embedding-based Retrieval-Augmented Generation (RAG) pipeline with Maximum Marginal Relevance (MMR) to enhance LLM accuracy by retrieving relevant and diverse historical samples, adapting to varied input patterns</li>
-                        <li>Leveraged LangChain for scalable LLM application development and LangFuse for performance monitoring</li>
-                    </ul>
-                    
-                    <strong>Project 2: Copilot for Business Strategy and Knowledge Management</strong>
-                    <ul class="project-list">
-                        <li>Built a LangGraph-based LLM pipeline to extract and organize domain-specific knowledge from presentation slides</li>
-                        <li>Utilized GraphRAG to structure extracted knowledge, enhancing LLM outputs with relevant, context-specific information</li>
-                        <li>Designed a standalone knowledge base system with a Streamlit-based UI, allowing business users to manage (insert, delete, update) knowledge, supported by a PostgreSQL database with Pgvector for efficient embedding storage and an MCP server for querying relevant data</li>
-                    </ul>
-                    
-                    <strong>Project 3: Operational Optimization</strong>
-                    <ul class="project-list">
-                        <li>Developed linear programming models to optimize operational planning processes, improving efficiency through data-driven decision-making</li>
-                        <li>Maintained automated data preprocessing pipelines to clean and prepare historical data for analytical tasks</li>
-                        <li>Built evaluation pipelines to assess and refine planning strategies</li>
-                        <li>Applied stochastic optimization techniques to address uncertainty in operational data, incorporating hard and soft constraints with dynamic penalty mechanisms to model user behavior accurately</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card-item">
-                <h5 class="card-title">Research Intern (AI Music) - Huawei, Hong Kong</h5>
-                <h6 class="card-subtitle mb-2">February 2023 – July 2023</h6>
-                <div class="card-text">
-                    <ul class="project-list">
-                        <li>Conducted in-depth research on music generation and music-related classification tasks</li>
-                        <li>Developed deep learning models for music classification using Stochastic Weight Averaging, mix-up, and gradient clipping, surpassing state-of-the-art benchmarks</li>
-                        <li>Contributed to the development of content generation</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="card-item">
-                <h5 class="card-title">QA Engineer Intern - Viu (PCCW Media), Hong Kong</h5>
-                <h6 class="card-subtitle mb-2">June 2021 – September 2021</h6>
-                <div class="card-text">
-                    <p><em>Job duty is mainly on data engineering</em></p>
-                    <ul class="project-list">
-                        <li>Conduct quality assurance (QA) on mobile applications and web pages to ensure data accuracy and completeness</li>
-                        <li>Track and process data using various tools such as DBT, Databricks, DBeaver, and Spark</li>
-                        <li>Query data from Redshift and S3 to extract insights and create reports</li>
-                        <li>Build interactive Tableau dashboards to visualize and analyze data</li>
-                        <li>Using Atlassian tools (Jira, Confluence, and BitBucket) for project management / collaboration</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <section id="education" class="mt-5">
-            <h2 class="section-title">🎓 Education</h2>
-            <div class="card-item">
-                <h5 class="card-title">Master of Science, Computing (Artificial Intelligence and Machine Learning)</h5>
-                <h6 class="card-subtitle mb-2">Imperial College London, 2023-2024</h6>
-                <p class="card-text">
-                    - Graduated with Distinction (September 2024)<br>
-                    - MSc Project: Data mining medical records of cannabis therapy in the UK
-                </p>
-
-                <!-- Button to toggle courses list -->
-                <a href="#coursesList1" data-toggle="collapse" class="btn btn-primary mt-3" role="button" aria-expanded="false" aria-controls="coursesList">
-                    View Courses
-                </a>
-                
-                <!-- Collapsible courses list -->
-                <div class="collapse courseList" id="coursesList1">
-                    <div class="card card-body mt-3">
-                        <ul>
-                            <li>Term 1:</li>
-                            <ul>
-                                <li>Introduction to Machine Learning</li>
-                                <li>Mathematics for Machine Learning</li>
-                                <li>Computational Finance</li>
-                                <li>Computer Vision</li>
-                                <li>Prolog</li>
-                            </ul>
-                            <li>Term 2:</li>
-                            <ul>
-                                <li>Machine Learning for Imaging</li>
-                                <li>Natural Language Processing</li>
-                                <li>Software engineering for Machine Learning Systems</li>
-                                <li>Deep Graph-Based Learning</li>
-                            </ul>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card-item">
-                <h5 class="card-title">Bachelor of Science, Computer Science (Stream: Database and Information Systems)</h5>
-                <h6 class="card-subtitle mb-2">The Chinese University of Hong Kong, 2019-2023</h6>
-                <p class="card-text">
-                    - Graduated with First Class Honors (GPA: 3.595 / 4.000)<br>
-                    - Minor in Data Analytics and Informatics<br>
-                    - Dean’s List for Academic Excellence: 2021-2022, 2022-2023<br>
-                    - Final Year Project: Music Chord Detection
-                </p>
-
-                <!-- Button to toggle courses list -->
-                <a href="#coursesList2" data-toggle="collapse" class="btn btn-primary mt-3" role="button" aria-expanded="false" aria-controls="coursesList">
-                    View Courses
-                </a>
-                
-                <!-- Collapsible courses list -->
-                <div class="collapse courseList" id="coursesList2">
-                    <div class="card card-body mt-3">
-                        <ul>
-                            <li>Highlighted Math Courses:</li>
-                            <ul>
-                                <li>Calculus for Engineers</li>
-                                <li>Linear Algebra for Engineers</li>
-                                <li>Multivariable Calculus for Engineers</li>
-                                <li>Games and Strategic Thinking</li>
-                                <li>Discrete Mathematics for Engineers</li>
-                                <li>Probability for Engineers</li>
-                                <li>Statistics for Engineers</li>
-                            </ul>
-                            <li>Highlighted Computer Science Courses:</li>
-                            <ul>
-                                <li>Fundamentals of Machine Learning</li>
-                                <li>Fundamentals of Artificial Intelligence</li>
-                                <li>Introduction to Database Systems</li>
-                                <li>Introduction to Operating Systems</li>
-                                <li>Introduction to Data Science</li>
-                                <li>E-Commerce Data Mining</li>
-                            </ul>
-                        </ul>
-                    </div>
-                </div>
-        </section>
-
-        <section id="skills" class="mt-5">
-            <h2 class="section-title">🛠 Skills</h2>
-            <div class="card-item">
-                <table class="table skills-table">
-                    <tbody>
-                        <tr>
-                            <th scope="row">Programming Languages</th>
-                            <td>Python (Advanced), JavaScript, SQL, Prolog, C</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Python Ecosystem</th>
-                            <td>
-                                <div class="skill-item">
-                                    <span class="skill-label">ML/AI:</span>
-                                    <span class="skill-content">PyTorch, TensorFlow, scikit-learn, LangChain, LangGraph, Hugging Face Transformers</span>
-                                </div>
-                                <div class="skill-item">
-                                    <span class="skill-label">Data & Analytics:</span>
-                                    <span class="skill-content">NumPy, Pandas, PySpark, Matplotlib, Seaborn, Librosa</span>
-                                </div>
-                                <div class="skill-item">
-                                    <span class="skill-label">Web & UI:</span>
-                                    <span class="skill-content">Streamlit, Selenium, BeautifulSoup</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">AI/ML Specialization</th>
-                            <td>
-                                <div class="skill-item">
-                                    <span class="skill-label">LLM & NLP:</span>
-                                    <span class="skill-content">Retrieval-Augmented Generation (RAG), GraphRAG, Vector Embeddings</span>
-                                </div>
-                                <div class="skill-item">
-                                    <span class="skill-label">Optimization:</span>
-                                    <span class="skill-content">Linear Programming, Stochastic Optimization</span>
-                                </div>
-                                <div class="skill-item">
-                                    <span class="skill-label">Tools:</span>
-                                    <span class="skill-content">LangFuse, MCP (Model Context Protocol)</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Data Engineering & Infrastructure</th>
-                            <td>
-                                <div class="skill-item">
-                                    <span class="skill-label">Databases:</span>
-                                    <span class="skill-content">PostgreSQL, Pgvector, Amazon Redshift, MongoDB, MySQL</span>
-                                </div>
-                                <div class="skill-item">
-                                    <span class="skill-label">Platforms:</span>
-                                    <span class="skill-content">Databricks, Apache Spark, dbt, AWS S3</span>
-                                </div>
-                                <div class="skill-item">
-                                    <span class="skill-label">Tools:</span>
-                                    <span class="skill-content">DBeaver, Tableau</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Development & Collaboration</th>
-                            <td>
-                                <div class="skill-item">
-                                    <span class="skill-label">Web:</span>
-                                    <span class="skill-content">Node.js, Express.js, React.js, Bootstrap, HTML/CSS</span>
-                                </div>
-                                <div class="skill-item">
-                                    <span class="skill-label">DevOps:</span>
-                                    <span class="skill-content">Git, Atlassian Suite (Jira, Confluence, BitBucket)</span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Languages</th>
-                            <td>English (Fluent), Chinese (Native)</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="github_repositories" class="mt-5">
-            <h2 class="section-title">🚀 GitHub Repositories</h2>
-            <div class="github-repos">
-                <div class="github-repo-card">
-                    <h5 class="github-repo-title"><a href="https://github.com/kenneth2001/Virus" target="_blank">Virus</a></h5>
-                    <p class="github-repo-text">A discord bot developed using discord.py</p>
-                </div>
-                <div class="github-repo-card">
-                    <h5 class="github-repo-title"><a href="https://github.com/kenneth2001/NightBlue" target="_blank">NightBlue</a></h5>
-                    <p class="github-repo-text">A dark theme for VSCode across various programming languages</p>
-                </div>
-                <div class="github-repo-card">
-                    <h5 class="github-repo-title"><a href="https://github.com/kenneth2001/Music-Genre-Classification" target="_blank">Music Genre Classification</a></h5>
-                    <p class="github-repo-text">My first deep learning project - music genre classification using CNNs.</p>
-                </div>
-                <div class="github-repo-card">
-                    <h5 class="github-repo-title"><a href="https://github.com/kenneth2001/LeetCode_Solution" target="_blank">LeetCode_Solution</a></h5>
-                    <p class="github-repo-text">My solutions to LeetCode problems, including Python, C and SQL.</p>
-                </div>
-                <div class="github-repo-card">
-                    <h5 class="github-repo-title"><a href="https://github.com/kenneth2001/Codewars_Solution" target="_blank">Codewars_Solution</a></h5>
-                    <p class="github-repo-text">My solutions to Codewars problems, including Python, C and Java.</p>
-                </div>
-                <div class="github-repo-card">
-                    <h5 class="github-repo-title"><a href="https://github.com/kenneth2001/comfyui_controlnet_preprocessors" target="_blank">comfyui_controlnet_preprocessors</a></h5>
-                    <p class="github-repo-text">Adding controlnet preprocessor nodes to ComfyUI</p>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src='https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js'></script>
-    <script src="./js/homepage.js"></script>
-
-</body>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
 </html>
