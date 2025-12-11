@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"></feGaussianBlur>
+      <feFlood flood-color="#00f3ff" flood-opacity="0.8" result="flood"></feFlood>
+      <feComposite in="flood" in2="blur" operator="atop" result="light"></feComposite>
+      <feMerge>
+        <feMergeNode in="light"></feMergeNode>
+        <feMergeNode in="SourceGraphic"></feMergeNode>
+      </feMerge>
+    </filter>
+  </defs>
+  <text x="50%" y="68%" font-family="Inter, sans-serif" font-size="65" font-weight="700" text-anchor="middle" fill="#00f3ff" filter="url(#neon-glow)">K</text>
+</svg>

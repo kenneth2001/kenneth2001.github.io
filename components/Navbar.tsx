@@ -83,7 +83,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
               onClick={() => handleLinkClick('#about')}
             >
               <div className="relative">
-                <span className="text-xl md:text-2xl font-bold text-white tracking-tight relative z-10 transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-neon-blue group-hover:to-neon-purple">
+                <span className="text-xl md:text-xl lg:text-2xl font-bold text-white tracking-tight relative z-10 transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-neon-blue group-hover:to-neon-purple">
                   {PERSONAL_INFO.name}
                   <span className="text-neon-blue group-hover:text-neon-pink transition-colors">.</span>
                 </span>
@@ -94,12 +94,12 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
             {/* Desktop Navigation */}
             <div className="hidden md:block">
               {/* Changed items-baseline to items-center to align mixed content (text vs icon buttons) properly */}
-              <div className="ml-10 flex items-center space-x-2">
+              <div className="ml-4 lg:ml-10 flex items-center space-x-1 lg:space-x-2">
                 {navLinks.map((link) => (
                   <button
                     key={link.name}
                     onClick={() => handleLinkClick(link.href)}
-                    className={`relative px-4 py-2 text-sm font-medium transition-colors group overflow-hidden rounded-md ${currentView === 'home' ? 'text-slate-300 hover:text-white' : 'text-slate-400 hover:text-slate-200'}`}
+                    className={`relative px-3 lg:px-4 py-2 text-sm font-medium transition-colors group overflow-hidden rounded-md ${currentView === 'home' ? 'text-slate-300 hover:text-white' : 'text-slate-400 hover:text-slate-200'}`}
                   >
                     <span className="relative z-10">{link.name}</span>
                     <span className="absolute inset-0 bg-slate-800/0 group-hover:bg-slate-800/50 transition-colors duration-300 rounded-md"></span>
@@ -110,7 +110,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
                 {/* Ratings Link */}
                 <button
                     onClick={() => handleLinkClick('/ratings')}
-                    className={`relative px-4 py-2 text-sm font-medium transition-colors group overflow-hidden rounded-md ${currentView === 'ratings' ? 'text-white' : 'text-slate-300 hover:text-white'}`}
+                    className={`relative px-3 lg:px-4 py-2 text-sm font-medium transition-colors group overflow-hidden rounded-md ${currentView === 'ratings' ? 'text-white' : 'text-slate-300 hover:text-white'}`}
                   >
                     <span className="relative z-10 flex items-center gap-2">
                         <Star size={14} className={currentView === 'ratings' ? 'text-neon-green fill-neon-green' : 'text-slate-400'} />
@@ -123,8 +123,8 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
             </div>
 
             {/* Desktop Social Icons */}
-            <div className="hidden md:flex items-center space-x-6">
-              <div className="flex items-center space-x-5 pl-6 border-l border-slate-800/50">
+            <div className="hidden md:flex items-center space-x-2 lg:space-x-6">
+              <div className="flex items-center space-x-3 lg:space-x-5 pl-3 lg:pl-6 border-l border-slate-800/50">
                 {socialLinks.map((social, index) => (
                   <a
                     key={index}
