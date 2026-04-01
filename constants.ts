@@ -20,10 +20,8 @@ export const EXPERIENCES: Job[] = [
       {
         title: "LLM-Based Workflow Automation",
         description: [
-          "Developed and deployed a Large Language Model (LLM) solution to parse unstructured data from emails, images, and tables.",
-          "Incorporated preprocessing pipelines to extract key information, automate database queries, and categorize content.",
-          "Implemented an embedding-based Retrieval-Augmented Generation (RAG) pipeline with Maximum Marginal Relevance (MMR) to enhance LLM accuracy.",
-          "Leveraged LangChain for scalable LLM application development and LangFuse for performance monitoring."
+          "Built and deployed a scalable LLM solution with LangChain and LangFuse to parse unstructured data (emails, images, tables) via preprocessing pipelines that extract key information, automate database queries, and categorize content.",
+          "Implemented an embedding-based RAG pipeline with Maximum Marginal Relevance (MMR) to enhance LLM accuracy by retrieving relevant and diverse historical samples, adapting to varied input patterns."
         ]
       },
       {
@@ -31,16 +29,31 @@ export const EXPERIENCES: Job[] = [
         description: [
           "Built a LangGraph-based LLM pipeline to extract and organize domain-specific knowledge from presentation slides.",
           "Utilized GraphRAG to structure extracted knowledge, enhancing LLM outputs with relevant, context-specific information.",
-          "Designed a standalone knowledge base system with a Streamlit-based UI supported by PostgreSQL and Pgvector.",
-          "Implemented an MCP server for querying relevant data efficiently."
+          "Developed a standalone knowledge base with a Streamlit UI for business user CRUD operations, backed by PostgreSQL with Pgvector for embedding storage, and an MCP server for relevant data queries."
         ]
       },
       {
         title: "Operational Optimization",
         description: [
-          "Developed linear programming models to optimize operational planning processes, improving efficiency.",
+          "Developed linear programming models to optimize operational planning processes, improving efficiency through data-driven decision-making.",
           "Maintained automated data preprocessing pipelines to clean and prepare historical data for analytical tasks.",
-          "Applied stochastic optimization techniques to address uncertainty in operational data, incorporating hard and soft constraints."
+          "Built evaluation pipelines to assess and refine planning strategies.",
+          "Applied stochastic optimization techniques to address uncertainty in operational data, incorporating hard and soft constraints with dynamic penalty mechanisms to model user behavior accurately."
+        ]
+      },
+      {
+        title: "Conversational Analytics Platform",
+        description: [
+          "Joined an existing conversational analytics platform team to enhance data integration, enabling natural language queries for business intelligence without SQL or manual reporting.",
+          "Built automated data pipelines using Scala and Spark to transform raw market data into standardized formats.",
+          "Led POC implementation of semantic layer technology to replace complex SQL generation, enabling large language models to generate analytical queries through simplified parameter interfaces."
+        ]
+      },
+      {
+        title: "Logistics Simulation System",
+        description: [
+          "Developed a simulation system to model complex operational workflows, predict key performance metrics, and evaluate diverse operational scenarios.",
+          "Built and validated predictive models and probabilistic allocation algorithms using statistical weight functions, mapping aggregate predictions to granular flows and refining accuracy through statistical analysis, enabling data-driven planning and resource optimization."
         ]
       }
     ]
@@ -61,11 +74,11 @@ export const EXPERIENCES: Job[] = [
     period: "Jun 2021 - Sep 2021",
     highlight: "Job duty was mainly focused on Data Engineering",
     description: [
-      "Conduct quality assurance (QA) on mobile applications / web pages to ensure data accuracy",
-      "Track and process data using various tools such as DBT, Databricks, DBeaver, and Spark",
-      "Query data from Redshift and S3 to extract insights and create reports",
-      "Build interactive Tableau dashboards to visualize and analyze data",
-      "Use Atlassian tools (Jira, Confluence, and BitBucket) for project management / collaboration"
+      "Conducted quality assurance (QA) on mobile applications / web pages to ensure data accuracy",
+      "Tracked and processed data using various tools such as DBT, Databricks, DBeaver, and Spark",
+      "Queried data from Redshift and S3 to extract insights and create reports",
+      "Built interactive Tableau dashboards to visualize and analyze data",
+      "Used Atlassian tools (Jira, Confluence, and BitBucket) for project management / collaboration"
     ]
   }
 ];

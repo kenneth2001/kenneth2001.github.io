@@ -70,7 +70,7 @@ const Experience: React.FC = () => {
                         <h6 className="text-lg font-semibold text-fuchsia-400 mb-3 drop-shadow-[0_0_3px_rgba(167,139,250,0.5)]">{project.title}</h6>
                         <ul className="space-y-2">
                           {project.description.map((desc, dIndex) => (
-                            <li key={dIndex} className="flex items-start text-slate-300 text-sm">
+                            <li key={dIndex} className="flex items-start text-slate-300">
                               <div className="w-1.5 h-1.5 rounded-full bg-slate-600 mt-2 mr-3 flex-shrink-0 group-hover:bg-neon-blue transition-colors"></div>
                               <span>{desc}</span>
                             </li>
