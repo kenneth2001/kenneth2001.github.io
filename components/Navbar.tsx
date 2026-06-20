@@ -54,7 +54,6 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
     { name: 'About', href: '#about' },
     { name: 'Experience', href: '#experience' },
     { name: 'Education', href: '#education' },
-    { name: 'Skills', href: '#skills' },
   ];
 
   const socialLinks = [
