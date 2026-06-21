@@ -25,10 +25,10 @@ const Education: React.FC = () => {
                 {edu.period}
               </span>
             </div>
-            
+
             <h3 className="text-xl font-bold text-white mb-2">{edu.school}</h3>
             <h4 className="text-lg text-fuchsia-400 mb-4">{edu.degree}</h4>
-            
+
             {edu.honors && (
               <div className="mb-4">
                 {edu.honors.map((honor, hIndex) => (
@@ -39,11 +39,11 @@ const Education: React.FC = () => {
                 ))}
               </div>
             )}
-            
+
             <div className="mt-auto pt-4 border-t border-slate-800/50">
-                {edu.details?.map((detail, dIndex) => (
-                    <p key={dIndex} className="text-slate-400 text-sm mb-1">• {detail}</p>
-                ))}
+              {edu.details?.map((detail, dIndex) => (
+                <p key={dIndex} className="text-slate-400 text-sm mb-1">• {detail}</p>
+              ))}
             </div>
           </motion.div>
         ))}

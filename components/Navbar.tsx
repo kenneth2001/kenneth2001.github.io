@@ -41,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
         } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       }, 100);
     } else if (href === '/ratings') {
@@ -70,16 +70,24 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
         transition={{ duration: 0.5 }}
         className={`fixed w-full z-50 transition-all duration-300 border-b ${
           scrolled || currentView === 'ratings'
-            ? 'bg-slate-950/80 backdrop-blur-md border-slate-800/60 shadow-lg shadow-neon-purple/5' 
+            ? 'bg-slate-950/80 backdrop-blur-md border-slate-800/60 shadow-lg shadow-neon-purple/5'
             : 'bg-transparent border-transparent py-2 md:py-4'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <div 
-              className="flex-shrink-0 cursor-pointer group" 
+            <div
+              className="flex-shrink-0 cursor-pointer group"
+              role="button"
+              tabIndex={0}
               onClick={() => handleLinkClick('#about')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleLinkClick('#about');
+                }
+              }}
             >
               <div className="relative">
                 <span className="text-xl md:text-xl lg:text-2xl font-bold text-white tracking-tight relative z-10 transition-all duration-300 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-neon-blue group-hover:to-neon-purple">
@@ -105,19 +113,19 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
                     <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-neon-blue to-neon-purple transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
                   </button>
                 ))}
-                
+
                 {/* Ratings Link */}
                 <button
-                    onClick={() => handleLinkClick('/ratings')}
-                    className={`relative px-3 lg:px-4 py-2 text-sm font-medium transition-colors group overflow-hidden rounded-md ${currentView === 'ratings' ? 'text-white' : 'text-slate-300 hover:text-white'}`}
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                        <Star size={14} className={currentView === 'ratings' ? 'text-neon-green fill-neon-green' : 'text-slate-400'} />
-                        Ratings
-                    </span>
-                    <span className={`absolute inset-0 transition-colors duration-300 rounded-md ${currentView === 'ratings' ? 'bg-slate-800/80' : 'bg-slate-800/0 group-hover:bg-slate-800/50'}`}></span>
-                    <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-neon-green to-neon-blue transform transition-transform duration-300 origin-left ${currentView === 'ratings' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
-                  </button>
+                  onClick={() => handleLinkClick('/ratings')}
+                  className={`relative px-3 lg:px-4 py-2 text-sm font-medium transition-colors group overflow-hidden rounded-md ${currentView === 'ratings' ? 'text-white' : 'text-slate-300 hover:text-white'}`}
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Star size={14} className={currentView === 'ratings' ? 'text-neon-green fill-neon-green' : 'text-slate-400'} />
+                    Ratings
+                  </span>
+                  <span className={`absolute inset-0 transition-colors duration-300 rounded-md ${currentView === 'ratings' ? 'bg-slate-800/80' : 'bg-slate-800/0 group-hover:bg-slate-800/50'}`}></span>
+                  <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-neon-green to-neon-blue transform transition-transform duration-300 origin-left ${currentView === 'ratings' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                </button>
               </div>
             </div>
 
@@ -147,27 +155,27 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
               >
                 <span className="sr-only">Open main menu</span>
                 <AnimatePresence mode="wait">
-                    {isOpen ? (
-                        <motion.div
-                            key="close"
-                            initial={{ rotate: -90, opacity: 0 }}
-                            animate={{ rotate: 0, opacity: 1 }}
-                            exit={{ rotate: 90, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <X size={28} />
-                        </motion.div>
-                    ) : (
-                        <motion.div
-                            key="menu"
-                            initial={{ rotate: 90, opacity: 0 }}
-                            animate={{ rotate: 0, opacity: 1 }}
-                            exit={{ rotate: -90, opacity: 0 }}
-                            transition={{ duration: 0.2 }}
-                        >
-                            <Menu size={28} />
-                        </motion.div>
-                    )}
+                  {isOpen ? (
+                    <motion.div
+                      key="close"
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <X size={28} />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="menu"
+                      initial={{ rotate: 90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: -90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Menu size={28} />
+                    </motion.div>
+                  )}
                 </AnimatePresence>
               </button>
             </div>
@@ -179,14 +187,14 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, clipPath: "circle(0% at 100% 0%)" }}
-            animate={{ opacity: 1, clipPath: "circle(150% at 100% 0%)" }}
-            exit={{ opacity: 0, clipPath: "circle(0% at 100% 0%)" }}
-            transition={{ type: "spring", stiffness: 30, damping: 15 }}
-            style={{ 
-                willChange: "clip-path", 
-                transform: "translate3d(0,0,0)",
-                WebkitBackfaceVisibility: "hidden"
+            initial={{ opacity: 0, clipPath: 'circle(0% at 100% 0%)' }}
+            animate={{ opacity: 1, clipPath: 'circle(150% at 100% 0%)' }}
+            exit={{ opacity: 0, clipPath: 'circle(0% at 100% 0%)' }}
+            transition={{ type: 'spring', stiffness: 30, damping: 15 }}
+            style={{
+              willChange: 'clip-path',
+              transform: 'translate3d(0,0,0)',
+              WebkitBackfaceVisibility: 'hidden'
             }}
             className="fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-xl md:hidden flex flex-col items-center justify-center"
           >
@@ -208,44 +216,44 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
                     className="block w-full text-3xl font-bold text-slate-400 hover:text-white transition-all hover:scale-105 active:scale-95"
                   >
                     <span className="bg-clip-text hover:text-transparent hover:bg-gradient-to-r hover:from-neon-blue hover:to-neon-pink transition-all duration-300">
-                        {link.name}
+                      {link.name}
                     </span>
                   </button>
                 </motion.div>
               ))}
               <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="w-full text-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 }}
+                className="w-full text-center"
+              >
+                <button
+                  onClick={() => handleLinkClick('/ratings')}
+                  className="block w-full text-3xl font-bold text-neon-green hover:text-white transition-all hover:scale-105 active:scale-95"
                 >
-                  <button
-                    onClick={() => handleLinkClick('/ratings')}
-                    className="block w-full text-3xl font-bold text-neon-green hover:text-white transition-all hover:scale-105 active:scale-95"
-                  >
-                    Ratings
-                  </button>
-                </motion.div>
+                  Ratings
+                </button>
+              </motion.div>
             </nav>
 
-            <motion.div 
-                 initial={{ opacity: 0, y: 20 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 transition={{ delay: 0.5 }}
-                 className="absolute bottom-20 flex justify-center space-x-10 w-full z-10"
-              >
-                {socialLinks.map((social, index) => (
-                  <a
-                    key={index}
-                    href={social.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={`text-slate-400 hover:text-white transform hover:scale-125 transition-all duration-300 ${social.color}`}
-                  >
-                    {/* Increase size for mobile */}
-                    {React.cloneElement(social.icon as React.ReactElement<any>, { size: 32 })}
-                  </a>
-                ))}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="absolute bottom-20 flex justify-center space-x-10 w-full z-10"
+            >
+              {socialLinks.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`text-slate-400 hover:text-white transform hover:scale-125 transition-all duration-300 ${social.color}`}
+                >
+                  {/* Increase size for mobile */}
+                  {React.cloneElement(social.icon as React.ReactElement<{ size?: number }>, { size: 32 })}
+                </a>
+              ))}
             </motion.div>
           </motion.div>
         )}

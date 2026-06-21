@@ -13,7 +13,7 @@ const Experience: React.FC = () => {
             key={index}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, margin: '-100px' }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
             className="relative group"
           >
@@ -75,14 +75,14 @@ const Experience: React.FC = () => {
                           indexByKey.set(key, grouped.length);
                           grouped.push({ category: key, projects: [] });
                         }
-                        grouped[indexByKey.get(key)!].projects.push(p);
+                        grouped[indexByKey.get(key)].projects.push(p);
                       });
 
                       // Fallback: when no project carries a category, render flat (legacy behaviour).
                       const hasCategories = grouped.some(g => g.category !== '');
 
                       if (!hasCategories) {
-                        return job.projects!.map((project, pIndex) => (
+                        return job.projects.map((project, pIndex) => (
                           <div key={pIndex} className="bg-slate-950/50 rounded-lg p-5 border border-slate-800/50 hover:border-neon-blue/30 transition-colors">
                             <h6 className="text-lg font-semibold text-fuchsia-400 mb-3 drop-shadow-[0_0_3px_rgba(167,139,250,0.5)]">{project.title}</h6>
                             <ul className="space-y-2">
@@ -100,26 +100,26 @@ const Experience: React.FC = () => {
                       return grouped.map((group, gIndex) => {
                         const catSkills = job.categorySkills?.[group.category];
                         return (
-                        <div key={gIndex} className="bg-slate-950/50 rounded-lg p-5 border border-slate-800/50 hover:border-neon-blue/30 transition-colors">
-                          <h6 className="text-lg font-semibold text-fuchsia-400 mb-4 drop-shadow-[0_0_3px_rgba(167,139,250,0.5)]">{group.category}</h6>
-                          <ul className="space-y-3">
-                            {group.projects.map((project, pIndex) => (
-                              <li key={pIndex} className="flex items-start text-slate-300">
-                                <div className="w-1.5 h-1.5 rounded-full bg-slate-600 mt-2 mr-3 flex-shrink-0 group-hover:bg-neon-blue transition-colors"></div>
-                                <span className="text-justify"><span className="font-semibold text-slate-100">{project.title}:</span> {project.description[0]}</span>
-                              </li>
-                            ))}
-                          </ul>
-                          {catSkills && catSkills.length > 0 && (
-                            <div className="mt-4 flex flex-wrap gap-2">
-                              {catSkills.map((skill, sIndex) => (
-                                <span key={sIndex} className="bg-neon-purple/5 backdrop-blur-sm border border-neon-purple/20 text-neon-purple text-xs font-medium rounded-full px-3 py-1 drop-shadow-[0_0_3px_rgba(139,92,246,0.5)] hover:bg-neon-purple/15 hover:border-neon-purple/50 hover:shadow-[0_0_10px_rgba(139,92,246,0.4)] hover:drop-shadow-[0_0_6px_rgba(139,92,246,0.7)] hover:-translate-y-0.5 transition-all duration-300">
-                                  {skill}
-                                </span>
+                          <div key={gIndex} className="bg-slate-950/50 rounded-lg p-5 border border-slate-800/50 hover:border-neon-blue/30 transition-colors">
+                            <h6 className="text-lg font-semibold text-fuchsia-400 mb-4 drop-shadow-[0_0_3px_rgba(167,139,250,0.5)]">{group.category}</h6>
+                            <ul className="space-y-3">
+                              {group.projects.map((project, pIndex) => (
+                                <li key={pIndex} className="flex items-start text-slate-300">
+                                  <div className="w-1.5 h-1.5 rounded-full bg-slate-600 mt-2 mr-3 flex-shrink-0 group-hover:bg-neon-blue transition-colors"></div>
+                                  <span className="text-justify"><span className="font-semibold text-slate-100">{project.title}:</span> {project.description[0]}</span>
+                                </li>
                               ))}
-                            </div>
-                          )}
-                        </div>
+                            </ul>
+                            {catSkills && catSkills.length > 0 && (
+                              <div className="mt-4 flex flex-wrap gap-2">
+                                {catSkills.map((skill, sIndex) => (
+                                  <span key={sIndex} className="bg-neon-purple/5 backdrop-blur-sm border border-neon-purple/20 text-neon-purple text-xs font-medium rounded-full px-3 py-1 drop-shadow-[0_0_3px_rgba(139,92,246,0.5)] hover:bg-neon-purple/15 hover:border-neon-purple/50 hover:shadow-[0_0_10px_rgba(139,92,246,0.4)] hover:drop-shadow-[0_0_6px_rgba(139,92,246,0.7)] hover:-translate-y-0.5 transition-all duration-300">
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         );
                       });
                     })()}
