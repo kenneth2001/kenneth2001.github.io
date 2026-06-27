@@ -29,13 +29,13 @@ const Experience: React.FC = () => {
               </div>
 
               {/* Content Card */}
-              <div className="flex-1 bg-slate-900/40 rounded-2xl p-6 border border-slate-800 transition-all duration-300 hover:border-slate-700 hover:bg-slate-900/60 hover:shadow-[0_0_20px_rgba(139,92,246,0.1)]">
+              <div className="flex-1 bg-slate-900/40 rounded-2xl p-4 sm:p-6 border border-slate-800 transition-all duration-300 hover:border-slate-700 hover:bg-slate-900/60 hover:shadow-[0_0_20px_rgba(139,92,246,0.1)]">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                   <div>
                     <h3 className="text-xl md:text-2xl font-bold text-white group-hover:text-neon-blue transition-colors">{job.title}</h3>
                     <h4 className="text-lg text-primary-400 font-medium">{job.company}</h4>
                   </div>
-                  <div className="flex items-center mt-2 md:mt-0 text-slate-400 bg-slate-950 px-3 py-1 rounded-full text-sm border border-slate-800 group-hover:border-slate-700">
+                  <div className="flex items-center self-start md:self-auto mt-2 md:mt-0 text-slate-400 bg-slate-950 px-3 py-1 rounded-full text-sm border border-slate-800 group-hover:border-slate-700">
                     <Calendar size={16} className="mr-2" />
                     {job.period}
                   </div>
@@ -83,13 +83,13 @@ const Experience: React.FC = () => {
 
                       if (!hasCategories) {
                         return job.projects.map((project, pIndex) => (
-                          <div key={pIndex} className="bg-slate-950/50 rounded-lg p-5 border border-slate-800/50 hover:border-neon-blue/30 transition-colors">
+                          <div key={pIndex} className="border-l-2 border-neon-purple/30 pl-3 sm:p-5 sm:rounded-lg sm:border sm:border-slate-800/50 sm:bg-slate-950/50 hover:sm:border-neon-blue/30 transition-colors">
                             <h6 className="text-lg font-semibold text-fuchsia-400 mb-3 drop-shadow-[0_0_3px_rgba(167,139,250,0.5)]">{project.title}</h6>
                             <ul className="space-y-2">
                               {project.description.map((desc, dIndex) => (
                                 <li key={dIndex} className="flex items-start text-slate-300">
                                   <div className="w-1.5 h-1.5 rounded-full bg-slate-600 mt-2 mr-3 flex-shrink-0 group-hover:bg-neon-blue transition-colors"></div>
-                                  <span className="text-justify">{desc}</span>
+                                  <span className="text-justify text-sm md:text-base">{desc}</span>
                                 </li>
                               ))}
                             </ul>
@@ -100,13 +100,16 @@ const Experience: React.FC = () => {
                       return grouped.map((group, gIndex) => {
                         const catSkills = job.categorySkills?.[group.category];
                         return (
-                          <div key={gIndex} className="bg-slate-950/50 rounded-lg p-5 border border-slate-800/50 hover:border-neon-blue/30 transition-colors">
+                          <div key={gIndex} className="border-l-2 border-neon-purple/30 pl-3 sm:p-5 sm:rounded-lg sm:border sm:border-slate-800/50 sm:bg-slate-950/50 hover:sm:border-neon-blue/30 transition-colors">
                             <h6 className="text-lg font-semibold text-fuchsia-400 mb-4 drop-shadow-[0_0_3px_rgba(167,139,250,0.5)]">{group.category}</h6>
-                            <ul className="space-y-3">
+                            <ul className="sm:space-y-3">
                               {group.projects.map((project, pIndex) => (
-                                <li key={pIndex} className="flex items-start text-slate-300">
-                                  <div className="w-1.5 h-1.5 rounded-full bg-slate-600 mt-2 mr-3 flex-shrink-0 group-hover:bg-neon-blue transition-colors"></div>
-                                  <span className="text-justify"><span className="font-semibold text-slate-100">{project.title}:</span> {project.description[0]}</span>
+                                <li key={pIndex} className={`flex items-start text-slate-300 ${pIndex > 0 ? 'mt-3 border-t border-slate-800/50 pt-3 sm:mt-0 sm:border-0 sm:pt-0' : ''}`}>
+                                  <div className="w-1.5 h-1.5 rounded-full bg-slate-600 mt-2 mr-3 flex-shrink-0 group-hover:bg-neon-blue transition-colors hidden sm:block"></div>
+                                  <div className="min-w-0">
+                                    <span className="block font-semibold text-slate-100 mb-1">{project.title}</span>
+                                    <span className="block text-justify text-sm md:text-base">{project.description[0]}</span>
+                                  </div>
                                 </li>
                               ))}
                             </ul>
