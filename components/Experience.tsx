@@ -3,6 +3,7 @@ import Section from './Section';
 import { EXPERIENCES } from '../constants';
 import { motion } from 'framer-motion';
 import { Calendar, Briefcase, ChevronRight, Info } from 'lucide-react';
+import { fadeUp, viewportOnce } from '../reveal';
 
 const Experience: React.FC = () => {
   return (
@@ -11,10 +12,11 @@ const Experience: React.FC = () => {
         {EXPERIENCES.map((job, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-100px' }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+            variants={fadeUp}
+            custom={index}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
             className="relative group"
           >
             {/* Timeline connector for Desktop */}

@@ -3,6 +3,7 @@ import Section from './Section';
 import { EDUCATIONS } from '../constants';
 import { motion } from 'framer-motion';
 import { GraduationCap, Award } from 'lucide-react';
+import { scaleIn, viewportOnce } from '../reveal';
 
 const Education: React.FC = () => {
   return (
@@ -11,10 +12,11 @@ const Education: React.FC = () => {
         {EDUCATIONS.map((edu, index) => (
           <motion.div
             key={index}
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4, delay: index * 0.1 }}
+            variants={scaleIn}
+            custom={index}
+            initial="hidden"
+            whileInView="show"
+            viewport={viewportOnce}
             className="bg-slate-900/40 rounded-2xl p-6 border border-slate-800 hover:border-slate-700 flex flex-col h-full"
           >
             <div className="flex items-start justify-between mb-4">

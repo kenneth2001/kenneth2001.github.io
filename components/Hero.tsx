@@ -1,11 +1,61 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ArrowDown, FileJson, MapPin } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowDown, FileJson, MapPin, Terminal } from 'lucide-react';
 import { PERSONAL_INFO } from '../constants';
+import { fadeUp, fadeUpStagger, EASE } from '../reveal';
+
+// Terminal code content — typed out character-by-character on load.
+const CODE_LINES: { text: string; cls?: string }[][] = [
+  [{ text: '# Personal Highlights', cls: 'text-slate-500' }],
+  [{ text: 'role', cls: 'text-neon-purple' }, { text: ' = ', cls: 'text-slate-400' }, { text: '"Data Scientist"', cls: 'text-amber-300' }],
+  [{ text: ' ' }],
+  [{ text: 'key_expertise', cls: 'text-neon-purple' }, { text: ' = [', cls: 'text-slate-400' }],
+  [{ text: '  "Multi-Agent Systems"', cls: 'text-amber-300' }, { text: ',', cls: 'text-slate-400' }],
+  [{ text: '  "Deep Learning"', cls: 'text-amber-300' }, { text: ',', cls: 'text-slate-400' }],
+  [{ text: '  "Optimisation"', cls: 'text-amber-300' }],
+  [{ text: ']', cls: 'text-slate-400' }],
+  [{ text: ' ' }],
+  [{ text: '# Ready to contribute', cls: 'text-slate-500' }],
+  [{ text: 'status', cls: 'text-neon-purple' }, { text: ' = ', cls: 'text-slate-400' }, { text: '"Open for Opportunities"', cls: 'text-neon-green' }],
+];
+
+interface CharSpan {
+  char: string;
+  lineIndex: number;
+  cls?: string;
+}
+
+const CHAR_STREAM: CharSpan[] = CODE_LINES.flatMap((line, lineIndex) =>
+  line.flatMap((seg) => Array.from(seg.text).map((char) => ({ char, lineIndex, cls: seg.cls }))),
+);
+
+const NAME = PERSONAL_INFO.name.split(' ')[0];
 
 const Hero: React.FC = () => {
+  const reduce = Boolean(useReducedMotion());
+  const [typedChars, setTypedChars] = useState<number>(reduce ? CHAR_STREAM.length : 0);
+
+  // Character-by-character typewriter — "booting up" the profile.
+  useEffect(() => {
+    if (reduce) return;
+    let i = 0;
+    const timer = setInterval(() => {
+      i += 1;
+      setTypedChars(i);
+      if (i >= CHAR_STREAM.length) clearInterval(timer);
+    }, 16);
+    return () => clearInterval(timer);
+  }, [reduce]);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center pt-20 pb-16 md:pt-24 md:pb-32 overflow-hidden bg-slate-950" id="about">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+        @keyframes ht-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
+        .ht-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+        .ht-cursor { animation: ht-blink 1s steps(1) infinite; }
+        @media (prefers-reduced-motion: reduce) { .ht-cursor { animation: none; } }
+      `}</style>
 
       {/* Noise Texture to fix gradient banding */}
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light pointer-events-none z-0"></div>
@@ -18,54 +68,53 @@ const Hero: React.FC = () => {
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
 
           {/* Left Text Content */}
-          <div className="flex-1 text-center lg:text-left z-20">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <span className="inline-flex items-center py-1 px-3 rounded-full bg-slate-900/80 border border-neon-blue/30 text-neon-blue text-sm font-semibold mb-6 shadow-[0_0_10px_rgba(0,243,255,0.2)]">
-                <span className="w-2 h-2 rounded-full bg-neon-blue mr-2 animate-pulse shadow-[0_0_5px_rgba(0,243,255,1)]"></span>
-                Available for Data Science Roles
-              </span>
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
-                Hi, I&apos;m <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]">{PERSONAL_INFO.name.split(' ')[0]}</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
-                {PERSONAL_INFO.headline}
-              </p>
-
-              <div className="text-slate-400 mb-8 max-w-lg mx-auto lg:mx-0 flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-2">
-                <span className="flex items-center group"><span className="text-neon-green mr-2 group-hover:drop-shadow-[0_0_5px_rgba(10,255,0,0.8)] transition-all">✓</span> Multi-Agent Systems</span>
-                <span className="flex items-center group"><span className="text-neon-green mr-2 group-hover:drop-shadow-[0_0_5px_rgba(10,255,0,0.8)] transition-all">✓</span> Deep Learning</span>
-                <span className="flex items-center group"><span className="text-neon-green mr-2 group-hover:drop-shadow-[0_0_5px_rgba(10,255,0,0.8)] transition-all">✓</span> Optimisation</span>
-              </div>
-
-              <div className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8">
-                <a href="#experience" className="px-8 py-3.5 bg-primary-700/90 hover:bg-primary-600 text-white rounded-lg font-medium transition-all shadow-[0_0_15px_rgba(139,92,246,0.4)] hover:shadow-[0_0_25px_rgba(139,92,246,0.6)] hover:scale-105 flex items-center border border-primary-500/50">
-                  View Experience
-                </a>
-                <a href="#contact" className="px-8 py-3.5 bg-slate-900/80 hover:bg-slate-800 text-white border border-slate-700 hover:border-neon-blue/50 rounded-lg font-medium transition-all hover:shadow-[0_0_15px_rgba(0,243,255,0.2)]">
-                  Contact Me
-                </a>
-              </div>
-
-              {/* Hong Kong Location Badge - Neon Style */}
-              <div className="flex items-center justify-center lg:justify-start text-slate-500 text-sm">
-                <MapPin size={16} className="text-neon-pink mr-2 drop-shadow-[0_0_5px_rgba(255,0,255,0.8)]" />
-                <span className="tracking-widest uppercase text-xs font-semibold text-slate-400 border-l border-slate-700 pl-3 ml-1">
-                  Based in <span className="text-slate-200 group-hover:text-neon-pink transition-colors">Hong Kong</span>
-                </span>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right Visual Content - Profile Window */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            className="flex-1 text-center lg:text-left z-20"
+            variants={fadeUpStagger}
+            initial="hidden"
+            animate="show"
+          >
+            <motion.span variants={fadeUp} className="inline-flex items-center py-1 px-3 rounded-full bg-slate-900/80 border border-neon-blue/30 text-neon-blue text-sm font-semibold mb-6 shadow-[0_0_10px_rgba(0,243,255,0.2)]">
+              <span className="w-2 h-2 rounded-full bg-neon-blue mr-2 animate-pulse shadow-[0_0_5px_rgba(0,243,255,1)]"></span>
+              Available for Data Science Roles
+            </motion.span>
+            <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
+              Hi, I&apos;m <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]">{NAME}</span>
+            </motion.h1>
+            <motion.p variants={fadeUp} className="text-xl md:text-2xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
+              {PERSONAL_INFO.headline}
+            </motion.p>
+
+            <motion.div variants={fadeUp} className="text-slate-400 mb-8 max-w-lg mx-auto lg:mx-0 flex flex-wrap justify-center lg:justify-start gap-x-6 gap-y-2">
+              <span className="flex items-center group"><span className="text-neon-green mr-2 group-hover:drop-shadow-[0_0_5px_rgba(10,255,0,0.8)] transition-all">✓</span> Multi-Agent Systems</span>
+              <span className="flex items-center group"><span className="text-neon-green mr-2 group-hover:drop-shadow-[0_0_5px_rgba(10,255,0,0.8)] transition-all">✓</span> Deep Learning</span>
+              <span className="flex items-center group"><span className="text-neon-green mr-2 group-hover:drop-shadow-[0_0_5px_rgba(10,255,0,0.8)] transition-all">✓</span> Optimisation</span>
+            </motion.div>
+
+            <motion.div variants={fadeUp} className="flex flex-wrap justify-center lg:justify-start gap-4 mb-8">
+              <a href="#experience" className="px-8 py-3.5 bg-primary-700/90 hover:bg-primary-600 text-white rounded-lg font-medium transition-all shadow-[0_0_15px_rgba(139,92,246,0.4)] hover:shadow-[0_0_25px_rgba(139,92,246,0.6)] hover:scale-105 flex items-center border border-primary-500/50">
+                View Experience
+              </a>
+              <a href="#contact" className="px-8 py-3.5 bg-slate-900/80 hover:bg-slate-800 text-white border border-slate-700 hover:border-neon-blue/50 rounded-lg font-medium transition-all hover:shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                Contact Me
+              </a>
+            </motion.div>
+
+            {/* Hong Kong Location Badge - Neon Style */}
+            <motion.div variants={fadeUp} className="flex items-center justify-center lg:justify-start text-slate-500 text-sm">
+              <MapPin size={16} className="text-neon-pink mr-2 drop-shadow-[0_0_5px_rgba(255,0,255,0.8)]" />
+              <span className="tracking-widest uppercase text-xs font-semibold text-slate-400 border-l border-slate-700 pl-3 ml-1">
+                Based in <span className="text-slate-200 group-hover:text-neon-pink transition-colors">Hong Kong</span>
+              </span>
+            </motion.div>
+          </motion.div>
+
+          {/* Right Visual Content - Animated Terminal */}
+          <motion.div
             className="flex-1 w-full max-w-lg lg:max-w-xl z-20"
+            initial={reduce ? { opacity: 1 } : { opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.4, ease: EASE }}
           >
             <div className="relative group">
               {/* Neon Border Glow */}
@@ -86,37 +135,71 @@ const Hero: React.FC = () => {
                   <div className="w-10"></div>
                 </div>
 
-                {/* Code Content */}
+                {/* Code Content — character-by-character typewriter */}
                 <div className="p-6 overflow-x-auto bg-slate-900/90 backdrop-blur-sm">
-                  <pre className="font-mono text-sm md:text-base leading-relaxed">
-                    <code className="block text-slate-500 mb-4"># Personal Highlights</code>
-
-                    <code className="block mb-2">
-                      <span className="text-neon-purple">role</span> = <span className="text-amber-300">&quot;Data Scientist&quot;</span>
-                    </code>
-
-                    <code className="block mb-2">
-                      <span className="text-neon-purple">key_expertise</span> = [
-                    </code>
-                    <code className="block pl-4">
-                      <span className="text-amber-300">&quot;Multi-Agent Systems&quot;</span>,
-                    </code>
-                    <code className="block pl-4">
-                      <span className="text-amber-300">&quot;Deep Learning&quot;</span>,
-                    </code>
-                    <code className="block pl-4">
-                      <span className="text-amber-300">&quot;Optimisation&quot;</span>
-                    </code>
-                    <code className="block mb-2">]</code>
-
-                    <code className="block mt-4">
-                      <span className="text-slate-500"># Ready to contribute</span>
-                    </code>
-                    <code className="block">
-                      <span className="text-neon-purple">status</span> = <span className="text-neon-green drop-shadow-[0_0_3px_rgba(10,255,0,0.5)]">&quot;Open for Opportunities&quot;</span>
+                  <pre className="ht-mono text-sm md:text-base leading-relaxed">
+                    <code>
+                      {(() => {
+                        // Group typed chars back into their original lines for block rows.
+                        const lines: CharSpan[][] = [];
+                        for (let i = 0; i < typedChars; i++) {
+                          const span = CHAR_STREAM[i];
+                          if (!lines[span.lineIndex]) lines[span.lineIndex] = [];
+                          lines[span.lineIndex].push(span);
+                        }
+                        const isComplete = typedChars >= CHAR_STREAM.length;
+                        return lines.map((lineChars, li) => {
+                          // Merge consecutive chars with the same class into one span.
+                          const groups: { text: string; cls?: string }[] = [];
+                          lineChars.forEach((c) => {
+                            const last = groups[groups.length - 1];
+                            if (last && last.cls === c.cls) {
+                              last.text += c.char;
+                            } else {
+                              groups.push({ text: c.char, cls: c.cls });
+                            }
+                          });
+                          const showCursor =
+                            (isComplete && li === lines.length - 1) ||
+                            (!isComplete && CHAR_STREAM[typedChars]?.lineIndex === li);
+                          return (
+                            <span key={li} className="block">
+                              {groups.map((g, gi) => (
+                                <span key={gi} className={g.cls}>{g.text}</span>
+                              ))}
+                              {showCursor && (
+                                <span className="ht-cursor ml-0.5 inline-block h-4 w-2 translate-y-0.5 bg-neon-green align-middle"></span>
+                              )}
+                            </span>
+                          );
+                        });
+                      })()}
                     </code>
                   </pre>
                 </div>
+
+                {/* System Status Strip */}
+                <div className="flex items-center justify-between border-t border-slate-800 bg-slate-950/60 px-4 py-2.5">
+                  <div className="flex items-center gap-2 ht-mono text-[11px] tracking-wider text-slate-500">
+                    <Terminal size={11} className="text-neon-purple" />
+                    <span className="text-slate-600">LOC</span>
+                    <span className="text-slate-300">HKG</span>
+                  </div>
+                  <div className="flex items-center gap-2 ht-mono text-[11px] tracking-wider text-slate-500">
+                    <span className="text-slate-600">TZ</span>
+                    <span className="text-slate-300">HKT</span>
+                  </div>
+                  <div className="flex items-center gap-2 ht-mono text-[11px] tracking-wider text-slate-500">
+                    <span className="text-slate-600">STATUS</span>
+                    <span className="flex items-center gap-1.5 text-neon-green">
+                      <span className="h-1.5 w-1.5 rounded-full bg-neon-green animate-pulse shadow-[0_0_5px_rgba(10,255,0,0.8)]"></span>
+                      online
+                    </span>
+                  </div>
+                </div>
+
+                {/* Subtle scanline overlay */}
+                <div className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.5) 3px)' }}></div>
               </div>
             </div>
           </motion.div>
@@ -165,8 +248,8 @@ const Hero: React.FC = () => {
       </div>
 
       <motion.div
-        animate={{ y: [0, 10, 0] }}
-        transition={{ repeat: Infinity, duration: 2 }}
+        animate={reduce ? { y: 0 } : { y: [0, 10, 0] }}
+        transition={reduce ? undefined : { repeat: Infinity, duration: 2 }}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-slate-500 cursor-pointer hover:text-neon-blue transition-colors z-20"
         onClick={() => {
           const expSection = document.getElementById('experience');
