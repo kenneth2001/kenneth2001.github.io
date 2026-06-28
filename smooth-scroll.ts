@@ -23,6 +23,13 @@ export function initSmoothScroll(): () => void {
     return () => {};
   }
 
+  // Touch / mobile devices: skip Lenis. iOS Safari native scroll already has
+  // momentum + inertia; Lenis's rAF-driven touch interception causes scroll
+  // lockups on iOS. Only enable on devices with a fine pointer (desktop).
+  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
+    return () => {};
+  }
+
   if (lenisInstance) return () => {};
 
   const lenis = new Lenis({

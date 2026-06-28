@@ -42,29 +42,32 @@ const ScrambleText: React.FC<ScrambleTextProps> = ({
   const elRef = useRef<HTMLElement>(null);
   const frameRef = useRef<number | undefined>(undefined);
 
-  // Run one decode pass: scramble each char for a stagger, then lock final.
+  // Run one decode pass: scramble each char, locking left-to-right over a
+  // FIXED duration (time-based, not frame-counted). This ensures the decode
+  // completes in the same wall-clock time regardless of rAF throttle (mobile
+  // Safari Low Power Mode, background tabs, etc. can throttle rAF to ~10fps).
   const runDecode = (finalText: string) => {
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
     const chars = finalText.split('');
-    let frame = 0;
-    // framesPerChar scales with speed (higher speed = fewer frames = faster decode).
-    const framesPerChar = Math.max(2, Math.round(210 / speed));
-    const totalFrames = chars.length * framesPerChar;
+    const duration = speed * 40; // ~1200ms at speed=30
+    const startTime = performance.now();
 
     const tick = () => {
-      frame += 1;
-      const progress = frame / framesPerChar; // how many chars are "locked"
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const lockedCount = Math.floor(progress * chars.length);
+
       const output = chars
         .map((char, i) => {
           if (char === ' ') return ' ';
-          if (i < progress) return char; // locked
+          if (i < lockedCount) return char; // locked
           // still scrambling
           return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
         })
         .join('');
       setDisplay(output);
 
-      if (frame < totalFrames) {
+      if (elapsed < duration) {
         frameRef.current = requestAnimationFrame(tick);
       } else {
         setDisplay(finalText);
