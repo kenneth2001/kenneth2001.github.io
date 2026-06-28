@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, Github, Linkedin, Mail, Star } from 'lucide-react';
 import { PERSONAL_INFO } from '../constants';
 import { motion, AnimatePresence } from 'framer-motion';
+import { scrollTo } from '../smooth-scroll';
 
 interface NavbarProps {
   onNavigate: (view: string) => void;
@@ -39,14 +40,15 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate, currentView }) => {
       setTimeout(() => {
         const element = document.querySelector(href);
         if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
+          // Route through Lenis for smooth-scroll (falls back to native under reduced motion).
+          scrollTo(href);
         } else {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          scrollTo(0);
         }
       }, 100);
     } else if (href === '/ratings') {
       onNavigate('ratings');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollTo(0);
     }
   };
 

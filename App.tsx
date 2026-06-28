@@ -1,7 +1,8 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Footer from './components/Footer';
+import { initSmoothScroll } from './smooth-scroll';
 
 const Ratings = React.lazy(() => import('./components/Ratings'));
 
@@ -13,6 +14,12 @@ const LoadingFallback: React.FC = () => (
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState('home');
+
+  // Initialize Lenis smooth scroll + GSAP ScrollTrigger sync once.
+  useEffect(() => {
+    const cleanup = initSmoothScroll();
+    return cleanup;
+  }, []);
 
   return (
     <div className="bg-slate-950 min-h-screen text-slate-100 font-sans selection:bg-primary-500/30 selection:text-white flex flex-col">

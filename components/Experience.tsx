@@ -1,23 +1,24 @@
 import React from 'react';
 import Section from './Section';
 import { EXPERIENCES } from '../constants';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Calendar, Briefcase, ChevronRight, Info } from 'lucide-react';
-import { fadeUp, viewportOnce } from '../reveal';
+import { decryptBlur, viewportFancy } from '../reveal';
 
 const Experience: React.FC = () => {
+  const reduce = Boolean(useReducedMotion());
   return (
     <Section id="experience" title="Work Experience">
       <div className="space-y-12">
         {EXPERIENCES.map((job, index) => (
           <motion.div
             key={index}
-            variants={fadeUp}
+            variants={decryptBlur}
             custom={index}
-            initial="hidden"
-            whileInView="show"
-            viewport={viewportOnce}
-            className="relative group"
+            initial={reduce ? 'show' : 'hidden'}
+            whileInView={reduce ? undefined : 'show'}
+            viewport={reduce ? undefined : viewportFancy}
+            className="relative group [will-change:filter]"
           >
             {/* Timeline connector for Desktop */}
             <div className={`hidden md:block absolute left-[28px] top-[28px] bottom-[-48px] w-0.5 bg-slate-800 group-hover:bg-slate-700 transition-colors ${index === EXPERIENCES.length - 1 ? 'hidden' : ''}`}></div>

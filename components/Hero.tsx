@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowDown, FileJson, MapPin, Terminal } from 'lucide-react';
 import { PERSONAL_INFO } from '../constants';
-import { fadeUp, fadeUpStagger, EASE } from '../reveal';
+import { fadeUp, fadeUpStagger, decryptBlur } from '../reveal';
+import ScrambleText from './ScrambleText';
+import { gsap } from '../smooth-scroll';
+import { scrollTo } from '../smooth-scroll';
 
 // Terminal code content — typed out character-by-character on load.
 const CODE_LINES: { text: string; cls?: string }[][] = [
@@ -33,6 +36,9 @@ const NAME = PERSONAL_INFO.name.split(' ')[0];
 
 const Hero: React.FC = () => {
   const reduce = Boolean(useReducedMotion());
+  const sectionRef = useRef<HTMLElement>(null);
+  const skylineRef = useRef<HTMLDivElement>(null);
+  const terminalRef = useRef<HTMLDivElement>(null);
   const [typedChars, setTypedChars] = useState<number>(reduce ? CHAR_STREAM.length : 0);
 
   // Character-by-character typewriter — "booting up" the profile.
@@ -47,8 +53,42 @@ const Hero: React.FC = () => {
     return () => clearInterval(timer);
   }, [reduce]);
 
+  // Cinematic Hero exit (GSAP ScrollTrigger, NOT pinned).
+  // As you scroll away from the hero: skyline strokes draw in, terminal + text
+  // parallax at different rates for depth. No pin = no dead scroll distance.
+  useEffect(() => {
+    if (reduce || !sectionRef.current) return;
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+      // Skyline strokes draw in via stroke-dashoffset as the hero exits.
+      const skylinePaths = gsap.utils.toArray<SVGPathElement>('.hero-skyline path');
+      skylinePaths.forEach((path) => {
+        if (!path.getTotalLength) return;
+        const length = path.getTotalLength();
+        if (length > 0) {
+          gsap.set(path, { strokeDasharray: length, strokeDashoffset: length });
+          tl.to(path, { strokeDashoffset: 0, ease: 'none', duration: 0.5 }, 0);
+        }
+      });
+      // Skyline drifts down gently for depth. Terminal stays put — moving a
+      // foreground element against scroll reads as "shrinking" / broken.
+      if (skylineRef.current) {
+        tl.to(skylineRef.current, { y: '15%', ease: 'none', duration: 1 }, 0);
+      }
+    }, sectionRef.current);
+    return () => ctx.revert();
+  }, [reduce]);
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-20 pb-16 md:pt-24 md:pb-32 overflow-hidden bg-slate-950" id="about">
+    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center pt-20 pb-16 md:pt-24 md:pb-32 overflow-hidden bg-slate-950" id="about">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
         @keyframes ht-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
@@ -78,9 +118,21 @@ const Hero: React.FC = () => {
               <span className="w-2 h-2 rounded-full bg-neon-blue mr-2 animate-pulse shadow-[0_0_5px_rgba(0,243,255,1)]"></span>
               Available for Data Science Roles
             </motion.span>
-            <motion.h1 variants={fadeUp} className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
-              Hi, I&apos;m <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]">{NAME}</span>
-            </motion.h1>
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
+              <ScrambleText
+                as="span"
+                text="Hi, I'm "
+                trigger="mount"
+                speed={30}
+              />
+              <ScrambleText
+                as="span"
+                text={NAME}
+                trigger="mount"
+                speed={30}
+                className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]"
+              />
+            </h1>
             <motion.p variants={fadeUp} className="text-xl md:text-2xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
               {PERSONAL_INFO.headline}
             </motion.p>
@@ -111,10 +163,12 @@ const Hero: React.FC = () => {
 
           {/* Right Visual Content - Animated Terminal */}
           <motion.div
-            className="flex-1 w-full max-w-lg lg:max-w-xl z-20"
-            initial={reduce ? { opacity: 1 } : { opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.4, ease: EASE }}
+            ref={terminalRef}
+            className="flex-1 w-full max-w-lg lg:max-w-xl z-20 [will-change:filter,transform]"
+            variants={decryptBlur}
+            initial={reduce ? 'show' : 'hidden'}
+            animate="show"
+            custom={4}
           >
             <div className="relative group">
               {/* Neon Border Glow */}
@@ -207,7 +261,7 @@ const Hero: React.FC = () => {
       </div>
 
       {/* HK Skyline Silhouette - Stylized */}
-      <div className="absolute bottom-0 left-0 right-0 h-48 lg:h-64 w-full overflow-hidden z-0 pointer-events-none opacity-30 select-none">
+      <div ref={skylineRef} className="hero-skyline absolute bottom-0 left-0 right-0 h-48 lg:h-64 w-full overflow-hidden z-0 pointer-events-none opacity-30 select-none">
         {/* Gradient mask */}
         <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent z-10"></div>
 
@@ -248,12 +302,13 @@ const Hero: React.FC = () => {
       </div>
 
       <motion.div
-        animate={reduce ? { y: 0 } : { y: [0, 10, 0] }}
+        style={{ x: '-50%' }}
+        animate={reduce ? { y: 0, x: '-50%' } : { y: [0, 10, 0], x: '-50%' }}
         transition={reduce ? undefined : { repeat: Infinity, duration: 2 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-slate-500 cursor-pointer hover:text-neon-blue transition-colors z-20"
+        className="absolute bottom-8 left-1/2 text-slate-500 cursor-pointer hover:text-neon-blue transition-colors z-20"
         onClick={() => {
-          const expSection = document.getElementById('experience');
-          if(expSection) expSection.scrollIntoView({ behavior: 'smooth' });
+          // Route through Lenis for smooth-scroll to Experience.
+          scrollTo('#experience');
         }}
       >
         <ArrowDown size={28} className="drop-shadow-[0_0_5px_rgba(0,243,255,0.5)]" />

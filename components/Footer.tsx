@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, ArrowUp } from 'lucide-react';
 import { PERSONAL_INFO } from '../constants';
-import { fadeUp, viewportOnce } from '../reveal';
+import { fadeUp } from '../reveal';
 
 const Footer: React.FC = () => {
   const scrollToTop = () => {
@@ -24,8 +24,7 @@ const Footer: React.FC = () => {
         <motion.div
           variants={fadeUp}
           initial="hidden"
-          whileInView="show"
-          viewport={viewportOnce}
+          animate="show"
           className="flex flex-col md:flex-row items-center justify-between gap-6"
         >
           {/* Name & Copyright */}

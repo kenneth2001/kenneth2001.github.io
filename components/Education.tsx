@@ -1,23 +1,24 @@
 import React from 'react';
 import Section from './Section';
 import { EDUCATIONS } from '../constants';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { GraduationCap, Award } from 'lucide-react';
-import { scaleIn, viewportOnce } from '../reveal';
+import { decryptBlur, viewportFancy } from '../reveal';
 
 const Education: React.FC = () => {
+  const reduce = Boolean(useReducedMotion());
   return (
     <Section id="education" title="Education">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {EDUCATIONS.map((edu, index) => (
           <motion.div
             key={index}
-            variants={scaleIn}
+            variants={decryptBlur}
             custom={index}
-            initial="hidden"
-            whileInView="show"
-            viewport={viewportOnce}
-            className="bg-slate-900/40 rounded-2xl p-6 border border-slate-800 hover:border-slate-700 flex flex-col h-full"
+            initial={reduce ? 'show' : 'hidden'}
+            whileInView={reduce ? undefined : 'show'}
+            viewport={reduce ? undefined : viewportFancy}
+            className="bg-slate-900/40 rounded-2xl p-6 border border-slate-800 hover:border-slate-700 flex flex-col h-full [will-change:filter]"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="p-3 bg-primary-900/20 rounded-lg text-primary-400">
