@@ -18,7 +18,7 @@ const Experience: React.FC = () => {
             initial={reduce ? 'show' : 'hidden'}
             whileInView={reduce ? undefined : 'show'}
             viewport={reduce ? undefined : viewportFancy}
-            className="relative group [will-change:filter]"
+            className="relative group"
           >
             {/* Timeline connector for Desktop */}
             <div className={`hidden md:block absolute left-[28px] top-[28px] bottom-[-48px] w-0.5 bg-slate-800 group-hover:bg-slate-700 transition-colors ${index === EXPERIENCES.length - 1 ? 'hidden' : ''}`}></div>
@@ -119,7 +119,7 @@ const Experience: React.FC = () => {
                             {catSkills && catSkills.length > 0 && (
                               <div className="mt-4 flex flex-wrap gap-2">
                                 {catSkills.map((skill, sIndex) => (
-                                  <span key={sIndex} className="bg-neon-purple/5 backdrop-blur-sm border border-neon-purple/20 text-neon-purple text-xs font-medium rounded-full px-3 py-1 drop-shadow-[0_0_3px_rgba(139,92,246,0.5)] hover:bg-neon-purple/15 hover:border-neon-purple/50 hover:shadow-[0_0_10px_rgba(139,92,246,0.4)] hover:drop-shadow-[0_0_6px_rgba(139,92,246,0.7)] hover:-translate-y-0.5 transition-all duration-300">
+                                  <span key={sIndex} className="bg-neon-purple/5 border border-neon-purple/20 text-neon-purple text-xs font-medium rounded-full px-3 py-1 drop-shadow-[0_0_3px_rgba(139,92,246,0.5)] hover:bg-neon-purple/15 hover:border-neon-purple/50 hover:shadow-[0_0_10px_rgba(139,92,246,0.4)] hover:drop-shadow-[0_0_6px_rgba(139,92,246,0.7)] hover:-translate-y-0.5 transition-all duration-300">
                                     {skill}
                                   </span>
                                 ))}
@@ -136,7 +136,7 @@ const Experience: React.FC = () => {
                 {job.skills && job.skills.length > 0 && (
                   <div className="mt-6 flex flex-wrap gap-2">
                     {job.skills.map((skill, sIndex) => (
-                      <span key={sIndex} className="bg-neon-purple/5 backdrop-blur-sm border border-neon-purple/20 text-neon-purple text-xs font-medium rounded-full px-3 py-1 drop-shadow-[0_0_3px_rgba(139,92,246,0.5)] hover:bg-neon-purple/15 hover:border-neon-purple/50 hover:shadow-[0_0_10px_rgba(139,92,246,0.4)] hover:drop-shadow-[0_0_6px_rgba(139,92,246,0.7)] hover:-translate-y-0.5 transition-all duration-300">
+                      <span key={sIndex} className="bg-neon-purple/5 border border-neon-purple/20 text-neon-purple text-xs font-medium rounded-full px-3 py-1 drop-shadow-[0_0_3px_rgba(139,92,246,0.5)] hover:bg-neon-purple/15 hover:border-neon-purple/50 hover:shadow-[0_0_10px_rgba(139,92,246,0.4)] hover:drop-shadow-[0_0_6px_rgba(139,92,246,0.7)] hover:-translate-y-0.5 transition-all duration-300">
                         {skill}
                       </span>
                     ))}

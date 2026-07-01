@@ -20,7 +20,7 @@ const Section: React.FC<SectionProps> = ({ id, title, children, className = '' }
           initial={reduce ? 'show' : 'hidden'}
           whileInView={reduce ? undefined : 'show'}
           viewport={reduce ? undefined : viewportFancy}
-          className="mb-8 md:mb-12 [will-change:filter]"
+          className="mb-8 md:mb-12"
         >
           <div className="relative inline-block">
             <h2 className="text-3xl md:text-4xl font-bold text-white">
@@ -28,7 +28,7 @@ const Section: React.FC<SectionProps> = ({ id, title, children, className = '' }
                 as="span"
                 text={title}
                 trigger={reduce ? 'mount' : 'inView'}
-                speed={30}
+                speed={15}
               />
             </h2>
             <motion.span

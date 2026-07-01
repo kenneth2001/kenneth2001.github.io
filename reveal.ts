@@ -40,15 +40,20 @@ export const slideLeft: Variants = {
 };
 
 /**
- * Decrypt blur — blur + scale + opacity. The "booting up / decrypting" reveal,
- * on-brand for the terminal motif. Use on titles + cards (fancy elements only).
+ * Decrypt reveal — opacity + scale. The "booting up / decrypting" reveal.
+ *
+ * NOTE: Previously animated `filter: blur(12px → 0)`. Filter blur animation is
+ * one of the most expensive CSS operations on iOS Safari (per-frame
+ * re-rasterization), and was a primary cause of the mobile paint storm.
+ * The visual difference between fade+scale and fade+scale+blur is minimal;
+ * the performance difference is 5-10×.
+ *
  * Pass an index via `custom` for a sequential delay.
  */
 export const decryptBlur: Variants = {
-  hidden: { opacity: 0, filter: 'blur(12px)', scale: 0.96 },
+  hidden: { opacity: 0, scale: 0.96 },
   show: (i: number = 0) => ({
     opacity: 1,
-    filter: 'blur(0px)',
     scale: 1,
     transition: { duration: 0.7, ease: EASE, delay: i * 0.1 },
   }),

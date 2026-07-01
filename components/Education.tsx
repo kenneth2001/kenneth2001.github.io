@@ -18,7 +18,7 @@ const Education: React.FC = () => {
             initial={reduce ? 'show' : 'hidden'}
             whileInView={reduce ? undefined : 'show'}
             viewport={reduce ? undefined : viewportFancy}
-            className="bg-slate-900/40 rounded-2xl p-6 border border-slate-800 hover:border-slate-700 flex flex-col h-full [will-change:filter]"
+            className="bg-slate-900/40 rounded-2xl p-6 border border-slate-800 hover:border-slate-700 flex flex-col h-full"
           >
             <div className="flex items-start justify-between mb-4">
               <div className="p-3 bg-primary-900/20 rounded-lg text-primary-400">

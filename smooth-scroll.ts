@@ -5,6 +5,20 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 /**
+ * Robust touch-device detection. `pointer: coarse` alone misses some iPads
+ * that report `pointer: fine` when a keyboard/trackpad is attached. Combining
+ * with `maxTouchPoints` catches all iOS/touch devices.
+ */
+export function isTouchDevice(): boolean {
+  if (typeof window === 'undefined') return false;
+  return (
+    window.matchMedia('(pointer: coarse)').matches ||
+    navigator.maxTouchPoints > 0 ||
+    'ontouchstart' in window
+  );
+}
+
+/**
  * Singleton Lenis smooth-scroll instance, kept in module scope so any
  * component can import `lenis` / `scrollTo` without prop-drilling.
  *
@@ -15,7 +29,8 @@ let lenisInstance: Lenis | null = null;
 
 /**
  * Initialize Lenis + sync with GSAP ScrollTrigger. Call once at app mount.
- * Returns a cleanup function. No-op (returns no-op) under reduced motion.
+ * Returns a cleanup function. No-op (returns no-op) under reduced motion or
+ * on touch devices (iOS native scroll already has momentum/inertia).
  */
 export function initSmoothScroll(): () => void {
   // Honor reduced motion: skip Lenis entirely, use native scroll.
@@ -25,8 +40,8 @@ export function initSmoothScroll(): () => void {
 
   // Touch / mobile devices: skip Lenis. iOS Safari native scroll already has
   // momentum + inertia; Lenis's rAF-driven touch interception causes scroll
-  // lockups on iOS. Only enable on devices with a fine pointer (desktop).
-  if (typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches) {
+  // lockups on iOS.
+  if (isTouchDevice()) {
     return () => {};
   }
 
@@ -66,16 +81,24 @@ export function initSmoothScroll(): () => void {
 export function scrollTo(target: string | HTMLElement | number): void {
   const lenis = lenisInstance;
   if (lenis) {
+    // Desktop: Lenis offset accounts for fixed navbar (~80px).
     lenis.scrollTo(target, { offset: -80, duration: 1.2 });
   } else {
-    // Reduced-motion fallback
+    // Mobile fallback: scroll PAST the section top so the title is
+    // half-cropped (matching the desktop visual). +0 scrolls exactly to the
+    // section top; the fixed navbar covers the top padding + part of the title.
+    const NATIVE_OFFSET = -40;
     if (typeof target === 'number') {
-      window.scrollTo({ top: target });
+      window.scrollTo({ top: target, behavior: 'smooth' });
     } else if (typeof target === 'string') {
       const el = document.querySelector(target);
-      if (el) el.scrollIntoView();
+      if (el) {
+        const top = el.getBoundingClientRect().top + window.scrollY + NATIVE_OFFSET;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
     } else {
-      target.scrollIntoView();
+      const top = target.getBoundingClientRect().top + window.scrollY + NATIVE_OFFSET;
+      window.scrollTo({ top, behavior: 'smooth' });
     }
   }
 }

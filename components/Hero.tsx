@@ -1,63 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowDown, FileJson, MapPin, Terminal } from 'lucide-react';
+import { ArrowDown, MapPin } from 'lucide-react';
 import { PERSONAL_INFO } from '../constants';
 import { fadeUp, fadeUpStagger, decryptBlur } from '../reveal';
 import ScrambleText from './ScrambleText';
-import { gsap } from '../smooth-scroll';
+import TerminalWindow from './TerminalWindow';
+import { gsap, isTouchDevice } from '../smooth-scroll';
 import { scrollTo } from '../smooth-scroll';
-
-// Terminal code content — typed out character-by-character on load.
-const CODE_LINES: { text: string; cls?: string }[][] = [
-  [{ text: '# Personal Highlights', cls: 'text-slate-500' }],
-  [{ text: 'role', cls: 'text-neon-purple' }, { text: ' = ', cls: 'text-slate-400' }, { text: '"Data Scientist"', cls: 'text-amber-300' }],
-  [{ text: ' ' }],
-  [{ text: 'key_expertise', cls: 'text-neon-purple' }, { text: ' = [', cls: 'text-slate-400' }],
-  [{ text: '  "Multi-Agent Systems"', cls: 'text-amber-300' }, { text: ',', cls: 'text-slate-400' }],
-  [{ text: '  "Deep Learning"', cls: 'text-amber-300' }, { text: ',', cls: 'text-slate-400' }],
-  [{ text: '  "Optimisation"', cls: 'text-amber-300' }],
-  [{ text: ']', cls: 'text-slate-400' }],
-  [{ text: ' ' }],
-  [{ text: '# Ready to contribute', cls: 'text-slate-500' }],
-  [{ text: 'status', cls: 'text-neon-purple' }, { text: ' = ', cls: 'text-slate-400' }, { text: '"Open for Opportunities"', cls: 'text-neon-green' }],
-];
-
-interface CharSpan {
-  char: string;
-  lineIndex: number;
-  cls?: string;
-}
-
-const CHAR_STREAM: CharSpan[] = CODE_LINES.flatMap((line, lineIndex) =>
-  line.flatMap((seg) => Array.from(seg.text).map((char) => ({ char, lineIndex, cls: seg.cls }))),
-);
 
 const NAME = PERSONAL_INFO.name.split(' ')[0];
 
 const Hero: React.FC = () => {
   const reduce = Boolean(useReducedMotion());
+  const touch = isTouchDevice();
   const sectionRef = useRef<HTMLElement>(null);
   const skylineRef = useRef<HTMLDivElement>(null);
-  const terminalRef = useRef<HTMLDivElement>(null);
-  const [typedChars, setTypedChars] = useState<number>(reduce ? CHAR_STREAM.length : 0);
-
-  // Character-by-character typewriter — "booting up" the profile.
-  useEffect(() => {
-    if (reduce) return;
-    let i = 0;
-    const timer = setInterval(() => {
-      i += 1;
-      setTypedChars(i);
-      if (i >= CHAR_STREAM.length) clearInterval(timer);
-    }, 16);
-    return () => clearInterval(timer);
-  }, [reduce]);
 
   // Cinematic Hero exit (GSAP ScrollTrigger, NOT pinned).
-  // As you scroll away from the hero: skyline strokes draw in, terminal + text
-  // parallax at different rates for depth. No pin = no dead scroll distance.
+  // As you scroll away from the hero: skyline strokes draw in, skyline
+  // parallaxes for depth. Skipped on touch devices — native scroll is better
+  // on mobile and ScrollTrigger scrub can cause iOS Safari issues.
   useEffect(() => {
-    if (reduce || !sectionRef.current) return;
+    if (reduce || touch || !sectionRef.current) return;
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -78,31 +42,29 @@ const Hero: React.FC = () => {
           tl.to(path, { strokeDashoffset: 0, ease: 'none', duration: 0.5 }, 0);
         }
       });
-      // Skyline drifts down gently for depth. Terminal stays put — moving a
-      // foreground element against scroll reads as "shrinking" / broken.
+      // Skyline drifts down gently for depth.
       if (skylineRef.current) {
         tl.to(skylineRef.current, { y: '15%', ease: 'none', duration: 1 }, 0);
       }
     }, sectionRef.current);
     return () => ctx.revert();
-  }, [reduce]);
+  }, [reduce, touch]);
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center pt-20 pb-16 md:pt-24 md:pb-32 overflow-hidden bg-slate-950" id="about">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
         @keyframes ht-blink { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
         .ht-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
         .ht-cursor { animation: ht-blink 1s steps(1) infinite; }
         @media (prefers-reduced-motion: reduce) { .ht-cursor { animation: none; } }
       `}</style>
 
-      {/* Noise Texture to fix gradient banding */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light pointer-events-none z-0"></div>
-
-      {/* Background Glow Orbs - Enhanced */}
-      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-neon-purple/15 rounded-full blur-[120px] opacity-40 mix-blend-screen animate-pulse-slow"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-neon-blue/15 rounded-full blur-[100px] opacity-40 mix-blend-screen animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
+      {/* Background Glow Orbs — blend-mode + infinite animation disabled on touch.
+          mix-blend-screen + blur-[120px] + animate-pulse-slow is the most
+          expensive paint combo on iOS Safari (forces per-frame re-composite
+          of the blend stack). Gated behind max-md: for mobile. */}
+      <div className="absolute top-[-10%] left-[-10%] w-[600px] h-[600px] bg-neon-purple/15 rounded-full blur-[120px] opacity-40 max-md:opacity-20 max-md:blur-[60px] md:mix-blend-screen animate-pulse-slow max-md:[animation:none]"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-neon-blue/15 rounded-full blur-[100px] opacity-40 max-md:opacity-20 max-md:blur-[60px] md:mix-blend-screen animate-pulse-slow max-md:[animation:none]" style={{ animationDelay: '2s' }}></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10 w-full">
         <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
@@ -118,19 +80,21 @@ const Hero: React.FC = () => {
               <span className="w-2 h-2 rounded-full bg-neon-blue mr-2 animate-pulse shadow-[0_0_5px_rgba(0,243,255,1)]"></span>
               Available for Data Science Roles
             </motion.span>
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 tracking-tight leading-tight lg:whitespace-nowrap">
               <ScrambleText
                 as="span"
                 text="Hi, I'm "
                 trigger="mount"
                 speed={30}
+                disabled={touch}
               />
               <ScrambleText
                 as="span"
                 text={NAME}
                 trigger="mount"
                 speed={30}
-                className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple drop-shadow-[0_0_10px_rgba(139,92,246,0.5)]"
+                disabled={touch}
+                className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue to-neon-purple"
               />
             </h1>
             <motion.p variants={fadeUp} className="text-xl md:text-2xl text-slate-300 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">
@@ -161,101 +125,15 @@ const Hero: React.FC = () => {
             </motion.div>
           </motion.div>
 
-          {/* Right Visual Content - Animated Terminal */}
+          {/* Right Visual Content - Animated Terminal (isolated component) */}
           <motion.div
-            ref={terminalRef}
-            className="flex-1 w-full max-w-lg lg:max-w-xl z-20 [will-change:filter,transform]"
+            className="flex-1 w-full max-w-lg lg:max-w-xl z-20"
             variants={decryptBlur}
             initial={reduce ? 'show' : 'hidden'}
             animate="show"
             custom={4}
           >
-            <div className="relative group">
-              {/* Neon Border Glow */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-neon-pink to-neon-blue rounded-xl blur opacity-30 group-hover:opacity-75 transition duration-1000 group-hover:duration-200"></div>
-
-              <div className="relative bg-slate-900 rounded-xl border border-slate-800 shadow-2xl overflow-hidden">
-                {/* Window Header */}
-                <div className="bg-slate-950 px-4 py-3 flex items-center justify-between border-b border-slate-800">
-                  <div className="flex space-x-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500/50 hover:bg-red-500 hover:shadow-[0_0_8px_rgba(239,68,68,0.8)] transition-all"></div>
-                    <div className="w-3 h-3 rounded-full bg-amber-500/50 hover:bg-amber-500 hover:shadow-[0_0_8px_rgba(245,158,11,0.8)] transition-all"></div>
-                    <div className="w-3 h-3 rounded-full bg-emerald-500/50 hover:bg-emerald-500 hover:shadow-[0_0_8px_rgba(16,185,129,0.8)] transition-all"></div>
-                  </div>
-                  <div className="flex items-center text-xs text-slate-500 font-mono">
-                    <FileJson size={12} className="mr-2 text-neon-purple" />
-                    profile.py
-                  </div>
-                  <div className="w-10"></div>
-                </div>
-
-                {/* Code Content — character-by-character typewriter */}
-                <div className="p-6 overflow-x-auto bg-slate-900/90 backdrop-blur-sm">
-                  <pre className="ht-mono text-sm md:text-base leading-relaxed">
-                    <code>
-                      {(() => {
-                        // Group typed chars back into their original lines for block rows.
-                        const lines: CharSpan[][] = [];
-                        for (let i = 0; i < typedChars; i++) {
-                          const span = CHAR_STREAM[i];
-                          if (!lines[span.lineIndex]) lines[span.lineIndex] = [];
-                          lines[span.lineIndex].push(span);
-                        }
-                        const isComplete = typedChars >= CHAR_STREAM.length;
-                        return lines.map((lineChars, li) => {
-                          // Merge consecutive chars with the same class into one span.
-                          const groups: { text: string; cls?: string }[] = [];
-                          lineChars.forEach((c) => {
-                            const last = groups[groups.length - 1];
-                            if (last && last.cls === c.cls) {
-                              last.text += c.char;
-                            } else {
-                              groups.push({ text: c.char, cls: c.cls });
-                            }
-                          });
-                          const showCursor =
-                            (isComplete && li === lines.length - 1) ||
-                            (!isComplete && CHAR_STREAM[typedChars]?.lineIndex === li);
-                          return (
-                            <span key={li} className="block">
-                              {groups.map((g, gi) => (
-                                <span key={gi} className={g.cls}>{g.text}</span>
-                              ))}
-                              {showCursor && (
-                                <span className="ht-cursor ml-0.5 inline-block h-4 w-2 translate-y-0.5 bg-neon-green align-middle"></span>
-                              )}
-                            </span>
-                          );
-                        });
-                      })()}
-                    </code>
-                  </pre>
-                </div>
-
-                {/* System Status Strip */}
-                <div className="flex items-center justify-between border-t border-slate-800 bg-slate-950/60 px-4 py-2.5">
-                  <div className="flex items-center gap-2 ht-mono text-[11px] tracking-wider text-slate-500">
-                    <Terminal size={11} className="text-neon-purple" />
-                    <span className="text-slate-600">LOC</span>
-                    <span className="text-slate-300">HKG</span>
-                  </div>
-                  <div className="flex items-center gap-2 ht-mono text-[11px] tracking-wider text-slate-500">
-                    <span className="text-slate-600">TZ</span>
-                    <span className="text-slate-300">HKT</span>
-                  </div>
-                  <div className="flex items-center gap-2 ht-mono text-[11px] tracking-wider text-slate-500">
-                    <span className="text-slate-600">STATUS</span>
-                    <span className="flex items-center gap-1.5 text-neon-green">
-                      <span className="h-1.5 w-1.5 rounded-full bg-neon-green animate-pulse shadow-[0_0_5px_rgba(10,255,0,0.8)]"></span>
-                      online
-                    </span>
-                  </div>
-                </div>
-
-                {/* Subtle scanline overlay */}
-                <div className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{ background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.5) 3px)' }}></div>
-              </div>
-            </div>
+            <TerminalWindow />
           </motion.div>
         </div>
       </div>
@@ -303,11 +181,10 @@ const Hero: React.FC = () => {
 
       <motion.div
         style={{ x: '-50%' }}
-        animate={reduce ? { y: 0, x: '-50%' } : { y: [0, 10, 0], x: '-50%' }}
-        transition={reduce ? undefined : { repeat: Infinity, duration: 2 }}
-        className="absolute bottom-8 left-1/2 text-slate-500 cursor-pointer hover:text-neon-blue transition-colors z-20"
+        animate={reduce || touch ? { y: 0, x: '-50%' } : { y: [0, 10, 0], x: '-50%' }}
+        transition={reduce || touch ? undefined : { repeat: Infinity, duration: 2 }}
+        className="absolute bottom-2 md:bottom-8 left-1/2 text-slate-500 cursor-pointer hover:text-neon-blue transition-colors z-20"
         onClick={() => {
-          // Route through Lenis for smooth-scroll to Experience.
           scrollTo('#experience');
         }}
       >

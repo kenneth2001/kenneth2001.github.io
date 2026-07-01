@@ -1,33 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, memo } from 'react';
 import { useReducedMotion } from 'framer-motion';
-
-interface ScrambleTextProps {
-  /** Final text to decode into. */
-  text: string;
-  /** Optional className applied to the rendered element (preserves gradient styles etc). */
-  className?: string;
-  /** HTML tag. Defaults to span (use inside headings). */
-  as?: 'span' | 'h1' | 'h2' | 'h3';
-  /** ms per frame. Lower = faster decode. Default 35. */
-  speed?: number;
-  /**
-   * Trigger mode:
-   * - 'mount'   — decode once on mount (Hero H1)
-   * - 'inView'  — decode on enter, scramble-back on leave (Section titles, bidirectional)
-   */
-  trigger?: 'mount' | 'inView';
-  /** For 'inView': root margin for the IntersectionObserver. Default '-80px'. */
-  rootMargin?: string;
-}
 
 const SCRAMBLE_CHARS = '!<>-_\\/[]{}—=+*^?#$&%01ABCDEF';
 
+interface ScrambleTextProps {
+  text: string;
+  className?: string;
+  as?: 'span' | 'h1' | 'h2' | 'div';
+  speed?: number;
+  trigger?: 'mount' | 'inView';
+  rootMargin?: string;
+  disabled?: boolean;
+}
+
 /**
- * ScrambleText — decodes from random characters to the final text, char by char.
- * The terminal/hacker "decrypt" effect. Each position iterates through random
- * chars before locking onto its final character, left-to-right.
+ * ScrambleText — decode-from-random-chars effect.
  *
- * Under prefers-reduced-motion: renders the final text instantly, no animation.
+ * Writes scrambled text directly to `elRef.current.textContent` inside a rAF
+ * loop. Zero React re-renders during the animation.
+ *
+ * When `disabled` is true, renders the final text with no animation (used to
+ * skip the effect on touch devices where Safari throttles rAF during mount).
  */
 const ScrambleText: React.FC<ScrambleTextProps> = ({
   text,
@@ -36,83 +29,93 @@ const ScrambleText: React.FC<ScrambleTextProps> = ({
   speed = 35,
   trigger = 'mount',
   rootMargin = '-80px',
+  disabled = false,
 }) => {
   const reduce = Boolean(useReducedMotion());
-  const [display, setDisplay] = useState<string>(reduce ? text : '');
   const elRef = useRef<HTMLElement>(null);
   const frameRef = useRef<number | undefined>(undefined);
+  const failsafeRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
-  // Run one decode pass: scramble each char, locking left-to-right over a
-  // FIXED duration (time-based, not frame-counted). This ensures the decode
-  // completes in the same wall-clock time regardless of rAF throttle (mobile
-  // Safari Low Power Mode, background tabs, etc. can throttle rAF to ~10fps).
-  const runDecode = (finalText: string) => {
+  const cleanup = () => {
     if (frameRef.current) cancelAnimationFrame(frameRef.current);
-    const chars = finalText.split('');
-    const duration = speed * 40; // ~1200ms at speed=30
-    const startTime = performance.now();
+    if (failsafeRef.current) clearTimeout(failsafeRef.current);
+    frameRef.current = undefined;
+    failsafeRef.current = undefined;
+  };
 
-    const tick = () => {
-      const elapsed = performance.now() - startTime;
+  const inactive = reduce || disabled;
+
+  /** Write scrambled text to DOM, locking `lockedCount` chars from the left. */
+  const writeScramble = (lockedCount: number) => {
+    const el = elRef.current;
+    if (!el) return;
+    el.textContent = text
+      .split('')
+      .map((char, i) => {
+        if (char === ' ') return ' ';
+        if (i < lockedCount) return char;
+        return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
+      })
+      .join('');
+  };
+
+  /** Decode: scramble each char, locking left-to-right over a fixed duration. */
+  const runDecode = () => {
+    cleanup();
+    const el = elRef.current;
+    if (!el) return;
+
+    const chars = text.split('');
+    const duration = speed * 40; // ~1200ms at speed=30
+    let startTime: number | null = null;
+
+    const tick = (now: number) => {
+      if (!elRef.current) return;
+      if (startTime === null) startTime = now;
+      const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const lockedCount = Math.floor(progress * chars.length);
-
-      const output = chars
-        .map((char, i) => {
-          if (char === ' ') return ' ';
-          if (i < lockedCount) return char; // locked
-          // still scrambling
-          return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
-        })
-        .join('');
-      setDisplay(output);
+      writeScramble(lockedCount);
 
       if (elapsed < duration) {
         frameRef.current = requestAnimationFrame(tick);
       } else {
-        setDisplay(finalText);
+        elRef.current.textContent = text;
+        cleanup();
       }
     };
+
+    failsafeRef.current = setTimeout(() => {
+      if (elRef.current) elRef.current.textContent = text;
+      cleanup();
+    }, duration + 2000);
+
     frameRef.current = requestAnimationFrame(tick);
   };
 
-  // Scramble-back: replace text with random chars (for leave-back in inView mode).
+  /** Scramble-back: replace text with random chars (for inView leave). */
   const runScrambleBack = () => {
-    if (frameRef.current) cancelAnimationFrame(frameRef.current);
-    const output = text
-      .split('')
-      .map((char) =>
-        char === ' '
-          ? ' '
-          : SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)],
-      )
-      .join('');
-    setDisplay(output);
+    cleanup();
+    writeScramble(0);
   };
 
-  // Mount trigger: decode once.
+  // Mount trigger: decode on mount.
   useEffect(() => {
-    if (reduce || trigger !== 'mount') return;
-    runDecode(text);
-    return () => {
-      if (frameRef.current) cancelAnimationFrame(frameRef.current);
-    };
-    // runDecode is a stable closure over refs/state; re-running on its identity change is undesirable.
+    if (inactive || trigger !== 'mount') return;
+    runDecode();
+    return cleanup;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduce, trigger, text, speed]);
+  }, [inactive, trigger, text, speed]);
 
-  // inView trigger: IntersectionObserver, decode on enter, scramble-back on leave.
+  // inView trigger: decode on enter, scramble-back on leave.
   useEffect(() => {
-    if (reduce || trigger !== 'inView' || !elRef.current) return;
+    if (inactive || trigger !== 'inView' || !elRef.current) return;
     const el = elRef.current;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            runDecode(text);
-          } else {
-            runScrambleBack();
-          }
+          if (entry.isIntersecting) runDecode();
+          else runScrambleBack();
         });
       },
       { rootMargin, threshold: 0.1 },
@@ -120,18 +123,30 @@ const ScrambleText: React.FC<ScrambleTextProps> = ({
     observer.observe(el);
     return () => {
       observer.disconnect();
-      if (frameRef.current) cancelAnimationFrame(frameRef.current);
+      cleanup();
     };
-    // runDecode/runScrambleBack are stable closures; re-running on identity change is undesirable.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduce, trigger, text, rootMargin, speed]);
+  }, [inactive, trigger, text, rootMargin, speed]);
+
+  // visibilitychange: snap to final text when tab becomes visible.
+  useEffect(() => {
+    if (inactive) return;
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible' && elRef.current) {
+        elRef.current.textContent = text;
+        cleanup();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [inactive, text]);
 
   const Tag = as as React.ElementType;
   return (
     <Tag ref={elRef as React.Ref<HTMLElement>} className={className}>
-      {reduce ? text : display}
+      {text}
     </Tag>
   );
 };
 
-export default ScrambleText;
+export default memo(ScrambleText);
